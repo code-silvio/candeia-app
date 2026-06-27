@@ -33,4 +33,11 @@ export default [
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },
+  {
+    // Scripts e configs rodam em Node (não no browser).
+    files: ['scripts/**/*.js', '*.config.js', 'eslint.config.js'],
+    languageOptions: {
+      globals: { ...globals.node },
+    },
+  },
 ]

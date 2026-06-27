@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from 'react'
-import { SAINTS, THEME_META } from './data/saints'
+import { THEME_META } from './data/saints'
 import { C, QUOTE_SIZE } from './theme/tokens'
+import { useSaints } from './hooks/useSaints'
 import { useSettings } from './hooks/useSettings'
 import { useSaintCarousel } from './hooks/useSaintCarousel'
 import { buildShareCard } from './lib/shareCard'
@@ -17,10 +18,11 @@ export default function App() {
   const [shareImg, setShareImg] = useState(null)
 
   const { settings, setTextSize } = useSettings()
+  const { saints } = useSaints()
 
   const openMenu = useCallback(() => setMenuOpen(true), [])
   const { saint, selectedTheme, selectTheme, imageRef, quoteRef, stageHandlers } =
-    useSaintCarousel(SAINTS, openMenu)
+    useSaintCarousel(saints, openMenu)
 
   // Card de compartilhamento gerado sob demanda (dataURL p/ preview/download, blob p/ share nativo).
   const shareData = useRef({ dataURL: null, blob: null })

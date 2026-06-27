@@ -1,9 +1,10 @@
 // ── Data layer ────────────────────────────────────────────────────────────────
-// Fonte de conteúdo dos santos. Hoje é estático (seed local); este é o ponto
-// único que será trocado pela leitura do Supabase (tabela `saints`) sem
-// precisar tocar em componentes ou hooks. Mantenha o formato dos objetos.
+// Conteúdo dos santos. Em produção vem do Supabase (tabela `saints`, via
+// `useSaints`); esta lista é o SEED local: serve de fallback quando o Supabase
+// não está configurado/offline e é a fonte versionada usada por `scripts/seed.js`
+// e `seeds/saints.json`. Mantenha os dois em sincronia (mesmo formato/ids).
 
-export const SAINTS = [
+export const SEED_SAINTS = [
   {
     id: 1, name: 'Santo Agostinho', age: 'c. 354–430', themeValue: 'eucaristia',
     image: '/assets/santo-agostinho.png',
