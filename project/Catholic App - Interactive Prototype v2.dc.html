@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&amp;family=EB+Garamond:ital,wght@0,400;0,500;1,400&amp;family=Mulish:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; }
+    body {
+      font-family: 'Mulish', sans-serif;
+      background: #d9d4c8;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+    @keyframes vmFadeIn { from { opacity: 0; transform: scale(1.015); } to { opacity: 1; transform: scale(1); } }
+    @keyframes vmRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes vmSheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    @keyframes vmOverlay { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes vmScreenIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    @keyframes vmSlideInRight { from { opacity: 0; transform: translateX(64px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes vmSlideInLeft { from { opacity: 0; transform: translateX(-64px); } to { opacity: 1; transform: translateX(0); } }
+  </style>
+</helmet>
+
+<div style="width: 100%; height: 100vh; display: flex; align-items: center; justify-content: center; background: #d9d4c8; position: absolute; left: -8px; top: -1px">
+  <div style="position: relative; width: 100%; max-width: 430px; height: 100vh; max-height: 920px; background: #F2E9D2; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 30px 80px -28px rgba(46,36,25,0.55);">
+
+    <!-- IMAGE AREA (full-bleed, tappable) -->
+    <div onClick="{{ handleTap }}" onPointerDown="{{ onPointerDown }}" onPointerMove="{{ onPointerMove }}" onPointerUp="{{ onPointerUp }}" style="position: relative; flex: 1; min-height: 0; cursor: pointer; overflow: hidden; background: #3e1620; touch-action: none;">
+      <div ref="{{ imageRef }}" class="{{ fadeKey }}" style="position: absolute; inset: 0; background: radial-gradient(125% 95% at 50% 28%, #7a3a40 0%, #5e2230 46%, #3e1620 100%); display: flex; align-items: center; justify-content: center; animation: vmFadeIn 360ms cubic-bezier(0.2,0.8,0.2,1);">
+        <sc-if value="{{ hasImage }}" hint-placeholder-val="{{ false }}">
+          <img src="{{ saintImage }}" alt="{{ currentSaint.name }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 38%;">
+        </sc-if>
+        <sc-if value="{{ noImage }}" hint-placeholder-val="{{ true }}">
+          <svg width="150" height="216" viewBox="0 0 150 216" fill="none" style="opacity: 0.9;">
+            <circle cx="75" cy="66" r="40" stroke="#d9c081" stroke-width="1.2" opacity="0.85"></circle>
+            <circle cx="75" cy="66" r="54" stroke="#d9c081" stroke-width="0.6" opacity="0.4"></circle>
+            <line x1="75" y1="98" x2="75" y2="190" stroke="#d9c081" stroke-width="1.2" opacity="0.85"></line>
+            <line x1="45" y1="132" x2="105" y2="132" stroke="#d9c081" stroke-width="1.2" opacity="0.85"></line>
+          </svg>
+        </sc-if>
+      </div>
+
+      <!-- top scrim for header legibility -->
+      <div style="position: absolute; top: 0; left: 0; right: 0; height: 170px; background: linear-gradient(180deg, rgba(40,16,24,0.55) 0%, rgba(40,16,24,0) 100%); pointer-events: none;"></div>
+
+      <!-- header overlaid -->
+      <div style="position: absolute; top: 0; left: 0; right: 0; padding: 46px 26px 16px; pointer-events: none;">
+        <div style="position: absolute; top: 44px; right: 24px; line-height: 1;">{{ themeIcon }}</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-size: 23px; font-weight: 600; color: #f7eed7; line-height: 1.16; margin-top: 4px; padding-right: 40px;">{{ currentSaint.name }}</div>
+      </div>
+    </div>
+
+    <!-- QUOTE CARD -->
+    <div ref="{{ quoteRef }}" class="{{ fadeKey }}" style="background: #F2E9D2; padding: 26px 28px 22px; flex-shrink: 0; animation: vmRise 420ms cubic-bezier(0.2,0.8,0.2,1);">
+      <div style="font-family: 'Mulish'; font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #a07c34; margin-bottom: 15px;"><div>{{ currentSaint.theme }}</div></div>
+      <p style="font-family: 'Cormorant Garamond', serif; font-size: {{ quoteSize }}; font-weight: 500; font-style: italic; line-height: 1.42; color: #2e2419; letter-spacing: -0.005em;">{{ currentSaint.quote }}</p>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 22px; padding-top: 16px; border-top: 1px solid rgba(168,139,72,0.28)">
+        
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <svg width="17" height="20" viewBox="0 0 64 64" fill="none" style="flex-shrink: 0;"><path d="M32 12 C 41 25, 43 34, 32 45 C 21 34, 23 25, 32 12 Z" stroke="#c6713e" stroke-width="2.6" stroke-linejoin="round"></path><path d="M24 52 q8 7 16 0" stroke="#c6713e" stroke-width="2.6" stroke-linecap="round"></path></svg>
+          <span style="font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 600; color: #5e2230; line-height: 1;">Candeia</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 18px;">
+          
+          <button onClick="{{ openInfo }}" style="background: none; border: none; cursor: pointer; padding: 4px; display: flex; color: #8a6d2f;" style-active="transform: scale(0.82);">
+            <svg width="19" height="19" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7.4" stroke="currentColor" stroke-width="1.4"></circle><path d="M10 9v4.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path><circle cx="10" cy="6.5" r="0.95" fill="currentColor"></circle></svg>
+          </button>
+          <button onClick="{{ openShare }}" style="background: none; border: none; cursor: pointer; padding: 4px; display: flex; color: #8a6d2f;" style-active="transform: scale(0.82);">
+            <svg width="19" height="19" viewBox="0 0 20 20" fill="none"><path d="M10 13V3.2M10 3.2 6.6 6.6M10 3.2l3.4 3.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path><path d="M5 11v4.6a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path></svg>
+          </button>
+          <button onClick="{{ openMenu }}" style="background: none; border: none; cursor: pointer; padding: 4px; display: flex; color: #8a6d2f;">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="4" cy="10" r="1.7" fill="currentColor"></circle><circle cx="10" cy="10" r="1.7" fill="currentColor"></circle><circle cx="16" cy="10" r="1.7" fill="currentColor"></circle></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== DOUBLE-TAP / MENU OVERLAY ===== -->
+    <div onClick="{{ closeMenu }}" style="position: absolute; inset: 0; z-index: 60; display: {{ menuDisplay }}; align-items: flex-end; background: rgba(40,16,24,0.42); animation: vmOverlay 220ms ease;">
+      <div onClick="{{ stop }}" style="width: 100%; background: #F7F0DD; border-radius: 22px 22px 0 0; padding: 10px 26px 30px; max-height: 86%; overflow-y: auto; animation: vmSheetUp 320ms cubic-bezier(0.2,0.8,0.2,1); box-shadow: 0 -10px 40px -12px rgba(46,36,25,0.4);">
+
+        <!-- grabber -->
+        <div style="width: 38px; height: 4px; border-radius: 2px; background: #d8c89a; margin: 0 auto 18px;"></div>
+
+        <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 22px;">
+          <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: #5e2230;">Menu</h2>
+          <button onClick="{{ closeMenu }}" style="background: none; border: none; cursor: pointer; font-size: 22px; color: #b09a6e; line-height: 1;">✕</button>
+        </div>
+
+        <!-- THEME FILTER -->
+        <div style="margin-bottom: 26px;">
+          <div style="font-family: 'Mulish'; font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #a07c34; margin-bottom: 14px;">Filtrar por tema</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 9px;">
+            <sc-for list="{{ themes }}" as="t" hint-placeholder-count="6">
+              <button onClick="{{ t.select }}" style="font-family: 'Mulish'; font-size: 13px; font-weight: 500; cursor: pointer; padding: 9px 15px; border-radius: 2px; transition: all 160ms cubic-bezier(0.2,0.8,0.2,1); color: {{ t.fg }}; background: {{ t.bg }}; border: 1px solid {{ t.bd }};">{{ t.mark }}{{ t.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="height: 1px; background: rgba(168,139,72,0.24); margin: 0 0 22px;"></div>
+
+        <!-- TEXT SIZE -->
+        <div style="margin-bottom: 24px;">
+          <div style="font-family: 'Mulish'; font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #a07c34; margin-bottom: 14px;">Tamanho do texto</div>
+          <div style="display: flex; gap: 8px;">
+            <sc-for list="{{ textSizes }}" as="s" hint-placeholder-count="3">
+              <button onClick="{{ s.select }}" style="flex: 1; font-family: 'Cormorant Garamond', serif; font-style: italic; cursor: pointer; padding: 12px 8px; border-radius: 2px; transition: all 160ms cubic-bezier(0.2,0.8,0.2,1); font-size: {{ s.preview }}; color: {{ s.fg }}; background: {{ s.bg }}; border: 1px solid {{ s.bd }};">{{ s.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== SHARE SHEET ===== -->
+    <div onClick="{{ closeShare }}" style="position: absolute; inset: 0; z-index: 80; display: {{ shareDisplay }}; align-items: flex-end; background: rgba(40,16,24,0.42); animation: vmOverlay 220ms ease;">
+      <div onClick="{{ stop }}" style="width: 100%; background: #F7F0DD; border-radius: 22px 22px 0 0; padding: 10px 26px 30px; animation: vmSheetUp 320ms cubic-bezier(0.2,0.8,0.2,1); box-shadow: 0 -10px 40px -12px rgba(46,36,25,0.4);">
+        <div style="width: 38px; height: 4px; border-radius: 2px; background: #d8c89a; margin: 0 auto 18px;"></div>
+        <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 18px;">
+          <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: #5e2230;">{{ shareTitle }}</h2>
+          <button onClick="{{ closeShare }}" style="background: none; border: none; cursor: pointer; font-size: 22px; color: #b09a6e; line-height: 1;">✕</button>
+        </div>
+        <div style="display: flex; justify-content: center; margin-bottom: 22px;">
+          <sc-if value="{{ shareImg }}" hint-placeholder-val="{{ false }}">
+            <img src="{{ shareImg }}" alt="" style="width: 60%; border-radius: 4px; box-shadow: 0 14px 34px -12px rgba(46,36,25,0.55);">
+          </sc-if>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button onClick="{{ doShareNative }}" style="flex: 1; font-family: 'Mulish'; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; padding: 15px; border-radius: 2px; color: #fff; background: #5e2230; border: 1.5px solid #5e2230;">{{ shareBtn }}</button>
+          <button onClick="{{ doDownload }}" style="flex: 1; font-family: 'Mulish'; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; padding: 15px; border-radius: 2px; color: #8a6d2f; background: transparent; border: 1.5px solid #a98b48;">{{ downloadBtn }}</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== INFO / FONTE SHEET ===== -->
+    <div onClick="{{ closeInfo }}" style="position: absolute; inset: 0; z-index: 85; display: {{ infoDisplay }}; align-items: flex-end; background: rgba(40,16,24,0.42); animation: vmOverlay 220ms ease;">
+      <div onClick="{{ stop }}" style="width: 100%; background: #F7F0DD; border-radius: 22px 22px 0 0; padding: 10px 28px 32px; animation: vmSheetUp 320ms cubic-bezier(0.2,0.8,0.2,1); box-shadow: 0 -10px 40px -12px rgba(46,36,25,0.4);">
+        <div style="width: 38px; height: 4px; border-radius: 2px; background: #d8c89a; margin: 0 auto 18px;"></div>
+        <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 6px;">
+          <div style="font-family: 'Mulish'; font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #a07c34;">{{ infoEyebrow }}</div>
+          <button onClick="{{ closeInfo }}" style="background: none; border: none; cursor: pointer; font-size: 22px; color: #b09a6e; line-height: 1;">✕</button>
+        </div>
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 25px; font-weight: 600; font-style: italic; color: #5e2230; line-height: 1.16; margin-bottom: 20px;">{{ infoSource.work }}</h2>
+        <div style="display: flex; flex-direction: column; gap: 1px; background: rgba(168,139,72,0.28);">
+          <sc-for list="{{ infoRows }}" as="r" hint-placeholder-count="5">
+            <div style="display: flex; align-items: baseline; gap: 14px; background: #F7F0DD; padding: 13px 2px;">
+              <div style="flex-shrink: 0; width: 84px; font-family: 'Mulish'; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #a07c34;">{{ r.label }}</div>
+              <div style="flex: 1; font-family: 'Cormorant Garamond', serif; font-size: 18px; color: #2e2419; line-height: 1.3;">{{ r.value }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-top: 18px; font-family: 'Mulish'; font-size: 11px; color: #8a7a52; line-height: 1.45;">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" style="flex-shrink: 0;"><path d="M5 10.5 8.5 14 15 6" stroke="#8a6d2f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          <span>{{ infoNote }}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 430, &quot;height&quot;: 920 }
+}">
+class Component extends DCLogic {
+  state = {
+    currentId: 1,
+    selectedTheme: null,
+    menuOpen: false,
+    infoOpen: false,
+    shareOpen: false,
+    shareImg: null,
+    fadeNonce: 0,
+    settings: JSON.parse(localStorage.getItem('santos_settings') || '{"textSize":"md"}'),
+  };
+
+  lastTap = 0;
+  tapTimer = null;
+
+  imageRef = React.createRef();
+  quoteRef = React.createRef();
+  lastDir = 0;
+  shareBlob = null;
+  shareDataURL = null;
+  dragging = false;
+
+  _animNonce = 0;
+
+  componentDidUpdate() {
+    if (this._animNonce === this.state.fadeNonce) return;
+    this._animNonce = this.state.fadeNonce;
+    const eo = 'cubic-bezier(0.2,0.8,0.2,1)';
+    const d = this.lastDir;
+    const imgAnim = d > 0 ? 'vmSlideInRight 380ms ' + eo : d < 0 ? 'vmSlideInLeft 380ms ' + eo : 'vmFadeIn 360ms ' + eo;
+    const cardAnim = d > 0 ? 'vmSlideInRight 440ms ' + eo : d < 0 ? 'vmSlideInLeft 440ms ' + eo : 'vmRise 420ms ' + eo;
+    this.replay(this.imageRef.current, imgAnim);
+    this.replay(this.quoteRef.current, cardAnim);
+  }
+
+  replay(el, anim) {
+    if (!el) return;
+    el.style.transition = '';
+    el.style.transform = '';
+    el.style.opacity = '';
+    el.style.animation = 'none';
+    void el.offsetWidth;
+    el.style.animation = anim;
+  }
+  moved = false;
+  dragStartX = 0;
+  dragStartY = 0;
+
+  saints = [
+    { id: 1, name: 'Santo Agostinho', age: 'c. 354–430', themeValue: 'eucaristia', image: 'assets/santo-agostinho.png',
+      quote_pt: 'A Eucaristia é o alimento que alimenta a alma e nos une a Cristo.',
+      quote_en: 'The Eucharist is the bread that nourishes the soul and unites us to Christ.',
+      source: { work: 'Confissões', author: 'Santo Agostinho', book: 'Livro VII', page: 'p. 142', publisher: 'Paulus', edition: '3ª ed., 2017' } },
+    { id: 2, name: 'Santa Teresa de Calcutá', age: 'c. 1910–1997', themeValue: 'oracao', image: 'assets/madre-teresa.png',
+      quote_pt: 'Rezar é simplesmente conversar com Deus. Ele ama você, e é tão simples.',
+      quote_en: 'To pray is simply to talk with God. He loves you, and it is that simple.',
+      source: { work: 'Um Caminho Simples', author: 'Madre Teresa', book: 'Cap. 2 — Oração', page: 'p. 28', publisher: 'Editora Sextante', edition: '1ª ed., 2006' } },
+    { id: 3, name: 'São João Vianney', age: 'c. 1786–1859', themeValue: 'missa',
+      quote_pt: 'A Santa Missa é a maior ação de graças que podemos oferecer a Deus.',
+      quote_en: 'Holy Mass is the greatest act of thanksgiving we can offer to God.',
+      source: { work: 'Sermões do Cura d\'Ars', author: 'São João Maria Vianney', book: 'Sobre a Santa Missa', page: 'p. 87', publisher: 'Quadrante', edition: '2ª ed., 2014' } },
+    { id: 4, name: 'Santo Tomás de Aquino', age: 'c. 1225–1274', themeValue: 'liturgia',
+      quote_pt: 'A Liturgia é o cume para o qual tende toda a ação da Igreja.',
+      quote_en: 'The Liturgy is the summit toward which all the action of the Church tends.',
+      source: { work: 'Suma Teológica', author: 'Santo Tomás de Aquino', book: 'III, q. 83', page: 'p. 512', publisher: 'Edições Loyola', edition: '2ª ed., 2015' } },
+    { id: 5, name: 'Santa Catarina de Sena', age: 'c. 1347–1380', themeValue: 'virtudes',
+      quote_pt: 'A graça é a virtude que nos permite agir segundo a vontade de Deus.',
+      quote_en: 'Grace is the virtue that lets us act according to the will of God.',
+      source: { work: 'Diálogo da Divina Providência', author: 'Santa Catarina de Sena', book: 'Tratado da Discrição', page: 'p. 64', publisher: 'Paulinas', edition: '1ª ed., 2010' } },
+    { id: 6, name: 'São Bento', age: 'c. 480–547', themeValue: 'sacramentos', image: 'assets/sao-bento.png',
+      quote_pt: 'Os Sacramentos são sinais sensíveis da graça invisível de Deus.',
+      quote_en: 'The Sacraments are visible signs of the invisible grace of God.',
+      source: { work: 'A Regra de São Bento', author: 'São Bento de Núrsia', book: 'Prólogo', page: 'p. 19', publisher: 'Editora Vozes', edition: '5ª ed., 2018' } },
+  ];
+
+  // Cada tema tem um ícone próprio (SVG line-art, exibido no topo no lugar da cruz).
+  themeMeta = {
+    eucaristia:  { pt: 'Eucaristia',        en: 'Eucharist',        icon: 'monstrance' },
+    missa:       { pt: 'Santa Missa',       en: 'Holy Mass',        icon: 'chalice' },
+    liturgia:    { pt: 'Liturgia Católica', en: 'Catholic Liturgy', icon: 'book' },
+    oracao:      { pt: 'Oração',            en: 'Prayer',           icon: 'rosary' },
+    sacramentos: { pt: 'Sacramentos',       en: 'Sacraments',       icon: 'shell' },
+    virtudes:    { pt: 'Virtudes',          en: 'Virtues',          icon: 'heart' },
+  };
+
+  // Geometria de cada glifo (interior do <svg> 24x24). Substitua/adicione conforme a tabela de temas crescer.
+  themeIcons = {
+    monstrance: '<circle cx="12" cy="9.5" r="3"/><line x1="12" y1="2.3" x2="12" y2="4"/><line x1="16.6" y1="4.9" x2="15.4" y2="6.1"/><line x1="18.5" y1="9.5" x2="16.8" y2="9.5"/><line x1="16.6" y1="14.1" x2="15.4" y2="12.9"/><line x1="7.4" y1="4.9" x2="8.6" y2="6.1"/><line x1="5.5" y1="9.5" x2="7.2" y2="9.5"/><line x1="7.4" y1="14.1" x2="8.6" y2="12.9"/><line x1="12" y1="12.5" x2="12" y2="18"/><path d="M8.5 20 Q12 18 15.5 20"/><line x1="8.5" y1="20" x2="15.5" y2="20"/>',
+    chalice: '<circle cx="12" cy="3.1" r="1.5"/><path d="M7.3 6 H16.7 A4.7 4.7 0 0 1 7.3 6 Z"/><line x1="12" y1="10.6" x2="12" y2="17.5"/><path d="M8 20 Q12 17.4 16 20"/><line x1="8" y1="20" x2="16" y2="20"/>',
+    book: '<path d="M12 6.6 C9.5 5.1 6.6 5.1 4 5.9 V18.1 C6.6 17.3 9.5 17.3 12 18.8"/><path d="M12 6.6 C14.5 5.1 17.4 5.1 20 5.9 V18.1 C17.4 17.3 14.5 17.3 12 18.8"/><line x1="12" y1="6.6" x2="12" y2="18.8"/>',
+    rosary: '<circle cx="12" cy="8.5" r="5" stroke-dasharray="1.4 2.2"/><line x1="12" y1="13.5" x2="12" y2="17"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="10.3" y1="19" x2="13.7" y2="19"/>',
+    shell: '<path d="M5 13 A9 9 0 0 1 19 13"/><path d="M5 13 L12 18.5 L19 13"/><line x1="8.8" y1="14.4" x2="10.4" y2="18"/><line x1="12" y1="13.7" x2="12" y2="18.5"/><line x1="15.2" y1="14.4" x2="13.6" y2="18"/>',
+    heart: '<path d="M12 20 C5 14.6 4 10.7 6.2 8.2 C8 6.2 11 6.5 12 8.9 C13 6.5 16 6.2 17.8 8.2 C20 10.7 19 14.6 12 20 Z"/>',
+  };
+
+  themeOrder = ['eucaristia', 'missa', 'liturgia', 'oracao', 'sacramentos', 'virtudes'];
+
+  pool() {
+    return this.state.selectedTheme
+      ? this.saints.filter(s => s.themeValue === this.state.selectedTheme)
+      : this.saints;
+  }
+
+  current() {
+    return this.saints.find(s => s.id === this.state.currentId) || this.saints[0];
+  }
+
+  nextRandom = () => {
+    this.lastDir = 0;
+    const pool = this.pool();
+    if (pool.length <= 1) { this.setState({ fadeNonce: this.state.fadeNonce + 1 }); return; }
+    let pick;
+    do { pick = pool[Math.floor(Math.random() * pool.length)]; }
+    while (pick.id === this.state.currentId);
+    this.setState({ currentId: pick.id, fadeNonce: this.state.fadeNonce + 1 });
+  };
+
+  goNext = () => {
+    this.lastDir = 1;
+    const pool = this.pool();
+    if (pool.length === 0) return;
+    const idx = pool.findIndex(s => s.id === this.state.currentId);
+    const next = pool[(idx + 1) % pool.length];
+    this.setState({ currentId: next.id, fadeNonce: this.state.fadeNonce + 1 });
+  };
+
+  goPrev = () => {
+    this.lastDir = -1;
+    const pool = this.pool();
+    if (pool.length === 0) return;
+    const idx = pool.findIndex(s => s.id === this.state.currentId);
+    const prev = pool[(idx - 1 + pool.length) % pool.length];
+    this.setState({ currentId: prev.id, fadeNonce: this.state.fadeNonce + 1 });
+  };
+
+  onPointerDown = (e) => {
+    this.dragging = true;
+    this.moved = false;
+    this.dragStartX = e.clientX;
+    this.dragStartY = e.clientY;
+    try { e.currentTarget.setPointerCapture(e.pointerId); } catch (err) {}
+    const node = this.imageRef.current;
+    if (node) node.style.transition = 'none';
+  };
+
+  onPointerMove = (e) => {
+    if (!this.dragging) return;
+    const dx = e.clientX - this.dragStartX;
+    const dy = e.clientY - this.dragStartY;
+    if (Math.abs(dx) > 6 || Math.abs(dy) > 6) this.moved = true;
+    const node = this.imageRef.current;
+    if (node && Math.abs(dx) > Math.abs(dy)) {
+      node.style.transform = 'translateX(' + (dx * 0.6) + 'px)';
+      node.style.opacity = String(1 - Math.min(Math.abs(dx) / 520, 0.4));
+    }
+  };
+
+  onPointerUp = (e) => {
+    if (!this.dragging) return;
+    this.dragging = false;
+    const dx = e.clientX - this.dragStartX;
+    const dy = e.clientY - this.dragStartY;
+    const swipe = Math.abs(dx) > 64 && Math.abs(dx) > Math.abs(dy);
+    const node = this.imageRef.current;
+    if (node) {
+      node.style.transition = 'transform 260ms cubic-bezier(0.2,0.8,0.2,1), opacity 260ms cubic-bezier(0.2,0.8,0.2,1)';
+      node.style.transform = '';
+      node.style.opacity = '';
+    }
+    if (swipe) { if (dx < 0) this.goNext(); else this.goPrev(); }
+  };
+
+  handleTap = () => {
+    if (this.moved) { this.moved = false; return; }
+    const now = Date.now();
+    if (now - this.lastTap < 280) {
+      clearTimeout(this.tapTimer);
+      this.lastTap = 0;
+      this.setState({ menuOpen: true });
+    } else {
+      this.lastTap = now;
+      this.tapTimer = setTimeout(() => { this.nextRandom(); }, 280);
+    }
+  };
+
+  openMenu = (e) => { if (e) e.stopPropagation(); this.setState({ menuOpen: true }); };
+  closeMenu = () => this.setState({ menuOpen: false });
+  openInfo = (e) => { if (e) e.stopPropagation(); this.setState({ infoOpen: true }); };
+  closeInfo = () => this.setState({ infoOpen: false });
+  stop = (e) => e.stopPropagation();
+
+  selectTheme = (theme) => {
+    this.lastDir = 0;
+    const newTheme = this.state.selectedTheme === theme ? null : theme;
+    const pool = newTheme ? this.saints.filter(s => s.themeValue === newTheme) : this.saints;
+    const stillValid = pool.some(s => s.id === this.state.currentId);
+    this.setState({
+      selectedTheme: newTheme,
+      currentId: stillValid ? this.state.currentId : (pool[0] ? pool[0].id : this.state.currentId),
+      fadeNonce: this.state.fadeNonce + 1,
+    });
+  };
+
+  setTextSize = (size) => {
+    const settings = { ...this.state.settings, textSize: size };
+    this.setState({ settings });
+    localStorage.setItem('santos_settings', JSON.stringify(settings));
+  };
+
+  openShare = (e) => { if (e) e.stopPropagation(); this.shareCurrent(); };
+  closeShare = () => this.setState({ shareOpen: false });
+
+  shareCurrent = async () => {
+    const lang = 'pt';
+    const saint = this.current();
+    const quote = lang === 'pt' ? saint.quote_pt : saint.quote_en;
+    const theme = this.themeMeta[saint.themeValue][lang];
+    const eyebrow = lang === 'pt' ? 'SANTO DO DIA' : 'SAINT OF THE DAY';
+
+    const W = 1080, H = 1350, split = 760;
+    const c = document.createElement('canvas');
+    c.width = W; c.height = H;
+    const x = c.getContext('2d');
+
+    try {
+      await document.fonts.load("600 66px 'Cormorant Garamond'");
+      await document.fonts.load("italic 500 52px 'Cormorant Garamond'");
+      await document.fonts.load("700 22px 'Mulish'");
+      await document.fonts.ready;
+    } catch (e) {}
+
+    // wine band
+    const g = x.createRadialGradient(W / 2, 300, 60, W / 2, 300, 820);
+    g.addColorStop(0, '#7a3a40'); g.addColorStop(0.46, '#5e2230'); g.addColorStop(1, '#3e1620');
+    x.fillStyle = g; x.fillRect(0, 0, W, split);
+    // ivory band
+    x.fillStyle = '#F2E9D2'; x.fillRect(0, split, W, H - split);
+
+    // top band — imagem do santo (quando houver) ou halo/cruz
+    const cx = W / 2, cy = 195;
+    let drewImage = false;
+    if (saint.image) {
+      try {
+        const img = await this.loadImage(saint.image);
+        this.drawCover(x, img, 0, 0, W, split, 0.12);
+        const sc = x.createLinearGradient(0, split - 420, 0, split);
+        sc.addColorStop(0, 'rgba(40,16,24,0)');
+        sc.addColorStop(1, 'rgba(40,16,24,0.92)');
+        x.fillStyle = sc; x.fillRect(0, split - 420, W, 420);
+        drewImage = true;
+      } catch (e) {}
+    }
+
+    if (!drewImage) {
+      x.strokeStyle = '#d9c081'; x.lineCap = 'round';
+      x.globalAlpha = 0.9; x.lineWidth = 3.2;
+      x.beginPath(); x.arc(cx, cy, 64, 0, Math.PI * 2); x.stroke();
+      x.globalAlpha = 0.4; x.lineWidth = 1.6;
+      x.beginPath(); x.arc(cx, cy, 88, 0, Math.PI * 2); x.stroke();
+      x.globalAlpha = 0.9; x.lineWidth = 3.2;
+      x.beginPath(); x.moveTo(cx, cy + 50); x.lineTo(cx, cy + 200); x.stroke();
+      x.beginPath(); x.moveTo(cx - 52, cy + 118); x.lineTo(cx + 52, cy + 118); x.stroke();
+      x.globalAlpha = 1;
+    }
+
+    if (drewImage) {
+      // nome + idade ancorados na base da imagem
+      x.textAlign = 'left';
+      x.fillStyle = '#f7eed7';
+      x.font = "600 64px 'Cormorant Garamond'";
+      const nameLines = this.wrapText(x, saint.name, W - 160);
+      let ny = split - 96 - (nameLines.length - 1) * 70;
+      nameLines.forEach(l => { x.fillText(l, 80, ny); ny += 70; });
+      x.fillStyle = 'rgba(247,238,215,0.7)';
+      x.font = "400 26px 'Mulish'";
+      x.fillText(saint.age, 80, ny + 2);
+      x.textAlign = 'center';
+    } else {
+      x.textAlign = 'center';
+
+      // eyebrow
+      x.fillStyle = '#e4c878';
+      x.font = "700 22px 'Mulish'";
+      if ('letterSpacing' in x) x.letterSpacing = '6px';
+      x.fillText(eyebrow, cx, 470);
+      if ('letterSpacing' in x) x.letterSpacing = '0px';
+
+      // name (wrap to 2 lines)
+      x.fillStyle = '#f7eed7';
+      x.font = "600 66px 'Cormorant Garamond'";
+      const nameLines = this.wrapText(x, saint.name, W - 200);
+      let ny = 545;
+      nameLines.forEach(l => { x.fillText(l, cx, ny); ny += 72; });
+
+      // age
+      x.fillStyle = 'rgba(247,238,215,0.62)';
+      x.font = "400 26px 'Mulish'";
+      x.fillText(saint.age, cx, ny + 6);
+    }
+
+    // theme label
+    x.fillStyle = '#a07c34';
+    x.font = "700 22px 'Mulish'";
+    if ('letterSpacing' in x) x.letterSpacing = '4px';
+    x.fillText('— ' + theme.toUpperCase(), cx, 870);
+    if ('letterSpacing' in x) x.letterSpacing = '0px';
+
+    // quote (italic, centered, vertical-centered in ivory)
+    x.fillStyle = '#2e2419';
+    let qf = 54, lh = 70;
+    let qLines = this.wrapText(x, '“' + quote + '”', W - 200, "italic 500 " + qf + "px 'Cormorant Garamond'");
+    if (qLines.length > 5) { qf = 46; lh = 60; qLines = this.wrapText(x, '“' + quote + '”', W - 180, "italic 500 " + qf + "px 'Cormorant Garamond'"); }
+    x.font = "italic 500 " + qf + "px 'Cormorant Garamond'";
+    const blockTop = 960;
+    let qy = blockTop - ((qLines.length - 1) * lh) / 2 + 60;
+    qLines.forEach(l => { x.fillText(l, cx, qy); qy += lh; });
+
+    // footer — marca Candeia
+    x.strokeStyle = 'rgba(168,139,72,0.4)'; x.lineWidth = 1;
+    x.beginPath(); x.moveTo(cx - 60, 1238); x.lineTo(cx + 60, 1238); x.stroke();
+
+    const fy = 1288;
+    x.font = "600 46px 'Cormorant Garamond'";
+    const wordmark = 'Candeia';
+    const tw = x.measureText(wordmark).width;
+    const flameSize = 50, gap = 14;
+    const totalW = flameSize + gap + tw;
+    const startX = cx - totalW / 2;
+    this.drawFlame(x, startX + flameSize / 2, fy - 4, flameSize, '#c6713e');
+    x.textAlign = 'left';
+    x.textBaseline = 'middle';
+    x.fillStyle = '#5e2230';
+    x.fillText(wordmark, startX + flameSize + gap, fy);
+    x.textAlign = 'center';
+    x.textBaseline = 'alphabetic';
+
+    x.fillStyle = '#a07c34';
+    x.font = "700 17px 'Mulish'";
+    if ('letterSpacing' in x) x.letterSpacing = '4px';
+    x.fillText('PALAVRAS QUE ILUMINAM', cx, 1325);
+    if ('letterSpacing' in x) x.letterSpacing = '0px';
+
+    this.shareDataURL = c.toDataURL('image/png');
+    c.toBlob(b => { this.shareBlob = b; }, 'image/png');
+    this.setState({ shareImg: this.shareDataURL, shareOpen: true });
+  };
+
+  loadImage(src) {
+    return new Promise((res, rej) => {
+      const im = new Image();
+      im.onload = () => res(im);
+      im.onerror = rej;
+      im.src = src;
+    });
+  }
+
+  drawCover(ctx, img, dx, dy, dw, dh, focusY) {
+    const ir = img.width / img.height, dr = dw / dh;
+    let sw, sh, sx, sy;
+    if (ir > dr) { sh = img.height; sw = sh * dr; sx = (img.width - sw) / 2; sy = 0; }
+    else { sw = img.width; sh = sw / dr; sx = 0; sy = (img.height - sh) * (focusY != null ? focusY : 0.5); }
+    ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
+  }
+
+  drawFlame(ctx, cx, cy, size, color) {
+    ctx.save();
+    ctx.translate(cx - size / 2, cy - size / 2);
+    ctx.scale(size / 64, size / 64);
+    ctx.strokeStyle = color; ctx.lineWidth = 2.6; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.stroke(new Path2D('M32 12 C 41 25, 43 34, 32 45 C 21 34, 23 25, 32 12 Z'));
+    ctx.globalAlpha = 0.55;
+    ctx.lineWidth = 2.1;
+    ctx.stroke(new Path2D('M32 24 C 37 30, 38 35, 32 41 C 26 35, 27 30, 32 24 Z'));
+    ctx.globalAlpha = 1;
+    ctx.lineWidth = 2.6;
+    ctx.stroke(new Path2D('M24 52 q8 7 16 0'));
+    ctx.restore();
+  }
+
+  wrapText(ctx, text, maxW, font) {
+    if (font) ctx.font = font;
+    const words = text.split(' ');
+    const lines = [];
+    let line = '';
+    for (const w of words) {
+      const test = line ? line + ' ' + w : w;
+      if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = w; }
+      else line = test;
+    }
+    if (line) lines.push(line);
+    return lines;
+  }
+
+  doDownload = () => {
+    if (!this.shareDataURL) return;
+    const a = document.createElement('a');
+    a.href = this.shareDataURL;
+    a.download = 'santo-do-dia.png';
+    document.body.appendChild(a); a.click(); a.remove();
+  };
+
+  doShareNative = async () => {
+    try {
+      if (this.shareBlob && navigator.canShare) {
+        const file = new File([this.shareBlob], 'santo-do-dia.png', { type: 'image/png' });
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], title: 'Santo do dia' });
+          return;
+        }
+      }
+      if (navigator.share) { await navigator.share({ title: 'Santo do dia' }); return; }
+    } catch (e) {}
+    this.doDownload();
+  };
+
+  renderVals() {
+    const lang = 'pt';
+    const sz = this.state.settings.textSize;
+    const saint = this.current();
+
+    const wine = '#5e2230', gold = '#a98b48', goldSoft = 'rgba(168,139,72,0.10)';
+    const cardBd = 'rgba(168,139,72,0.45)', ink = '#5b513c';
+
+    const themes = this.themeOrder.map(v => {
+      const active = this.state.selectedTheme === v;
+      return {
+        value: v,
+        label: this.themeMeta[v][lang],
+        mark: active ? '✓ ' : '',
+        bg: active ? wine : '#F2E9D2',
+        fg: active ? '#f7eed7' : ink,
+        bd: active ? wine : cardBd,
+        select: () => this.selectTheme(v),
+      };
+    });
+
+    const sizeLabel = { sm: { pt: 'Aa', en: 'Aa' }, md: { pt: 'Aa', en: 'Aa' }, lg: { pt: 'Aa', en: 'Aa' } };
+    const sizePreview = { sm: '16px', md: '21px', lg: '27px' };
+    const textSizes = ['sm', 'md', 'lg'].map(v => {
+      const active = sz === v;
+      return {
+        value: v,
+        label: sizeLabel[v][lang],
+        preview: sizePreview[v],
+        bg: active ? wine : '#F2E9D2',
+        fg: active ? '#f7eed7' : ink,
+        bd: active ? wine : cardBd,
+        select: () => this.setTextSize(v),
+      };
+    });
+
+    const t = {
+      pt: { eyebrow: 'Santo do dia', hint: 'Deslize · toque · menu',
+            favOn: '★ Remover dos favoritos', favOff: '☆ Guardar nos favoritos',
+            favEyebrow: 'Sua coleção', favTitle: 'Favoritos', menuFav: 'Ver favoritos',
+            favEmpty: 'Você ainda não guardou nenhum santo. Toque no coração para começar sua coleção.',
+            shareTitle: 'Compartilhar', shareBtn: 'Compartilhar', downloadBtn: 'Baixar imagem',
+            infoEyebrow: 'Fonte da citação', infoNote: 'Referência verificada na obra original.',
+            lDates: 'Período', lAuthor: 'Autor', lBook: 'Trecho', lPage: 'Página', lPublisher: 'Editora', lEdition: 'Edição' },
+      en: { eyebrow: 'Saint of the day', hint: 'Swipe · tap · menu',
+            favOn: '★ Remove from favorites', favOff: '☆ Save to favorites',
+            favEyebrow: 'Your collection', favTitle: 'Favorites', menuFav: 'View favorites',
+            favEmpty: "You haven't saved any saints yet. Tap the heart to start your collection.",
+            shareTitle: 'Share', shareBtn: 'Share', downloadBtn: 'Save image',
+            infoEyebrow: 'Quote source', infoNote: 'Reference verified in the original work.',
+            lDates: 'Period', lAuthor: 'Author', lBook: 'Passage', lPage: 'Page', lPublisher: 'Publisher', lEdition: 'Edition' },
+    }[lang];
+
+    const iconKey = this.themeMeta[saint.themeValue].icon;
+    const themeIcon = React.createElement('svg', {
+      width: 28, height: 28, viewBox: '0 0 24 24', fill: 'none',
+      stroke: '#d9c081', strokeWidth: 1.4, strokeLinecap: 'round', strokeLinejoin: 'round',
+      style: { display: 'block' },
+      dangerouslySetInnerHTML: { __html: this.themeIcons[iconKey] || '' },
+    });
+
+    const src = saint.source || {};
+    const infoRows = [
+      { label: t.lDates, value: saint.age },
+      { label: t.lAuthor, value: src.author },
+      { label: t.lBook, value: src.book },
+      { label: t.lPage, value: src.page },
+      { label: t.lPublisher, value: src.publisher },
+      { label: t.lEdition, value: src.edition },
+    ].filter(r => r.value);
+
+    return {
+      currentSaint: {
+        name: saint.name,
+        age: saint.age,
+        theme: this.themeMeta[saint.themeValue][lang],
+        quote: lang === 'pt' ? saint.quote_pt : saint.quote_en,
+      },
+      eyebrow: t.eyebrow,
+      themeIcon,
+      saintImage: saint.image || null,
+      hasImage: !!saint.image,
+      noImage: !saint.image,
+      hint: t.hint,
+      quoteSize: { sm: '20px', md: '23px', lg: '28px' }[sz],
+      fadeKey: 'fade-' + this.state.fadeNonce,
+      handleTap: this.handleTap,
+      imageRef: this.imageRef,
+      quoteRef: this.quoteRef,
+      openShare: this.openShare,
+      closeShare: this.closeShare,
+      doShareNative: this.doShareNative,
+      doDownload: this.doDownload,
+      shareDisplay: this.state.shareOpen ? 'flex' : 'none',
+      shareImg: this.state.shareImg,
+      shareTitle: t.shareTitle,
+      shareBtn: t.shareBtn,
+      downloadBtn: t.downloadBtn,
+      onPointerDown: this.onPointerDown,
+      onPointerMove: this.onPointerMove,
+      onPointerUp: this.onPointerUp,
+      openMenu: this.openMenu,
+      closeMenu: this.closeMenu,
+      openInfo: this.openInfo,
+      closeInfo: this.closeInfo,
+      infoDisplay: this.state.infoOpen ? 'flex' : 'none',
+      infoEyebrow: t.infoEyebrow,
+      infoNote: t.infoNote,
+      infoSource: src,
+      infoRows,
+      stop: this.stop,
+      menuDisplay: this.state.menuOpen ? 'flex' : 'none',
+      themes,
+      selectTheme: this.selectTheme,
+      textSizes,
+      setTextSize: this.setTextSize,
+    };
+  }
+}
+</script>
+</body>
+</html>

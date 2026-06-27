@@ -1,0 +1,267 @@
+/* ============================================================
+   VALUMARIS — Colors & Type Tokens
+   Data intelligence platform for tokenized real-world assets.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=DM+Sans:wght@200;300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap');
+
+:root {
+  /* ─── CORE PALETTE ─── */
+  --midnight: #0B1527;        /* primary dark bg — terminal depth */
+  --navy: #152040;            /* secondary dark bg — sections, strips */
+  --navy-deep: #0E1E3A;       /* alternate dark bg */
+  --electric: #1655C8;        /* signal — primary brand blue */
+  --electric-light: #3A78F0;  /* accent, hover, highlight */
+  --teal: #0C7A6E;            /* positive, growth, health */
+  --gold: #A87800;            /* alert, caution, highlight */
+  --gold-light: #D4A010;
+  --gold-pale: #FFF4D0;
+
+  /* ─── SURFACE + NEUTRALS ─── */
+  --ivory: #F7F5F0;           /* primary light surface — report paper */
+  --cream: #EDEAE3;           /* subtle divider / secondary surface */
+  --cream-deep: #D8D4CC;      /* stronger divider */
+  --ink: #0D1520;             /* primary text on light */
+  --slate: #3D5070;           /* body text on light */
+  --silver: #7A8EA8;          /* muted label / caption */
+  --mist: #B8C4D4;            /* disabled, tertiary text */
+  --white: #FFFFFF;
+
+  /* ─── SEMANTIC FG/BG ─── */
+  --bg-0: var(--ivory);
+  --bg-1: var(--white);
+  --bg-2: var(--cream);
+  --bg-dark-0: var(--midnight);
+  --bg-dark-1: var(--navy);
+  --bg-dark-2: var(--navy-deep);
+
+  --fg-1: var(--ink);          /* primary text on light */
+  --fg-2: var(--slate);        /* body text */
+  --fg-3: var(--silver);       /* muted */
+  --fg-4: var(--mist);         /* disabled */
+  --fg-on-dark-1: #FFFFFF;
+  --fg-on-dark-2: rgba(255,255,255,0.65);
+  --fg-on-dark-3: rgba(255,255,255,0.35);
+  --fg-on-dark-4: rgba(255,255,255,0.18);
+
+  --accent: var(--electric);
+  --accent-hover: var(--electric-light);
+  --accent-on-dark: var(--electric-light);
+
+  --success: var(--teal);
+  --warning: var(--gold);
+  --danger: #C23A3A;
+
+  /* ─── BORDERS + DIVIDERS ─── */
+  --border-light: var(--cream);
+  --border-light-strong: var(--cream-deep);
+  --border-dark: rgba(255,255,255,0.07);
+  --border-dark-strong: rgba(255,255,255,0.12);
+  --border-accent: var(--electric);
+
+  /* ─── TYPE FAMILIES ─── */
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-body: 'DM Sans', -apple-system, system-ui, sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --font-serif-display: var(--font-display);
+  --font-sans: var(--font-body);
+  --font-mono-data: var(--font-mono);
+
+  /* ─── TYPE WEIGHTS ─── */
+  --fw-display: 400;          /* @kind font */
+  --fw-display-italic: 400;   /* @kind font */
+  --fw-body-thin: 200;        /* @kind font */
+  --fw-body-light: 300;       /* @kind font */
+  --fw-body: 400;             /* @kind font */
+  --fw-body-medium: 500;      /* @kind font */
+  --fw-mono: 400;             /* @kind font */
+
+  /* ─── TRACKING (brand uses wide letterspacing on labels) ─── */
+  --tracking-label: 0.22em;   /* mono uppercase labels */
+  --tracking-label-loose: 0.25em;
+  --tracking-eyebrow: 0.18em;
+  --tracking-button: 0.12em;
+  --tracking-display: 0.06em;
+  --tracking-wordmark: 0.12em; /* VALUMARIS wordmark */
+
+  /* ─── SPACING SCALE ─── */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 40px;
+  --space-8: 48px;
+  --space-9: 64px;
+  --space-10: 80px;
+  --space-11: 100px;
+
+  /* ─── RADII — brand is sharp-edged; radii are minimal ─── */
+  --radius-0: 0;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-pill: 999px;
+
+  /* ─── SHADOWS — restrained; terminal-like ─── */
+  --shadow-sm: 0 1px 2px rgba(11,21,39,0.04);
+  --shadow-md: 0 4px 16px rgba(11,21,39,0.06);
+  --shadow-lg: 0 24px 48px -12px rgba(11,21,39,0.18);
+  --shadow-glow: 0 0 0 1px rgba(22,85,200,0.25), 0 8px 32px rgba(22,85,200,0.12);
+
+  /* ─── MOTION ─── */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);  /* @kind other */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1); /* @kind other */
+  --dur-fast: 160ms;          /* @kind other */
+  --dur-base: 220ms;          /* @kind other */
+  --dur-slow: 400ms;          /* @kind other */
+}
+
+/* ============================================================
+   SEMANTIC TYPE STYLES
+   Use these class/element selectors on real content.
+   ============================================================ */
+
+.display-hero,
+h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(48px, 6vw, 88px);
+  line-height: 1.05;
+  letter-spacing: var(--tracking-display);
+  color: var(--fg-1);
+}
+
+.display-section,
+h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(36px, 4vw, 52px);
+  line-height: 1.1;
+  color: var(--fg-1);
+}
+h2 em, .display-section em { font-style: italic; color: var(--accent); }
+
+.display-card,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 1.25;
+  color: var(--fg-1);
+}
+
+h4 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 21px;
+  font-style: italic;
+  line-height: 1.35;
+  color: var(--fg-2);
+}
+
+.eyebrow, .section-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 300;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.eyebrow-accent {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: var(--tracking-wordmark);
+  text-transform: uppercase;
+}
+
+p, .body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--fg-2);
+}
+
+.body-lg {
+  font-size: 16px;
+  line-height: 1.7;
+  font-weight: 300;
+  font-family: var(--font-body);
+  color: var(--fg-2);
+}
+
+.body-sm {
+  font-size: 12px;
+  line-height: 1.6;
+  font-weight: 300;
+  font-family: var(--font-body);
+  color: var(--fg-3);
+}
+
+.quote, blockquote {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--fg-2);
+}
+
+.tagline {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--fg-2);
+}
+
+.label-ui {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.ticker, code, .mono {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--fg-2);
+}
+
+.ticker-lg {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--fg-1);
+}
+
+.data-value {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--fg-1);
+}
+
+.ipa {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--fg-3);
+  letter-spacing: 0.05em;
+}

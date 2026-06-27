@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&amp;family=EB+Garamond:ital,wght@0,400;0,500;1,400&amp;family=Mulish:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; }
+    body {
+      font-family: 'Mulish', sans-serif;
+      background: #d9d4c8;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+    @keyframes vmFadeIn { from { opacity: 0; transform: scale(1.015); } to { opacity: 1; transform: scale(1); } }
+    @keyframes vmRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes vmSheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    @keyframes vmOverlay { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes vmScreenIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  </style>
+</helmet>
+
+<div style="width: 100%; height: 100vh; display: flex; align-items: center; justify-content: center; background: #d9d4c8;">
+  <div style="position: relative; width: 100%; max-width: 430px; height: 100vh; max-height: 920px; background: #F2E9D2; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 30px 80px -28px rgba(46,36,25,0.55);">
+
+    <!-- IMAGE AREA (full-bleed, tappable) -->
+    <div onClick="{{ handleTap }}" onPointerDown="{{ onPointerDown }}" onPointerMove="{{ onPointerMove }}" onPointerUp="{{ onPointerUp }}" style="position: relative; flex: 1; min-height: 0; cursor: pointer; overflow: hidden; background: #3e1620; touch-action: none;">
+      <div ref="{{ imageRef }}" class="{{ fadeKey }}" style="position: absolute; inset: 0; background: radial-gradient(125% 95% at 50% 28%, #7a3a40 0%, #5e2230 46%, #3e1620 100%); display: flex; align-items: center; justify-content: center; animation: vmFadeIn 360ms cubic-bezier(0.2,0.8,0.2,1);">
+        <svg width="150" height="216" viewBox="0 0 150 216" fill="none" style="opacity: 0.9;">
+          <circle cx="75" cy="66" r="40" stroke="#d9c081" stroke-width="1.2" opacity="0.85"></circle>
+          <circle cx="75" cy="66" r="54" stroke="#d9c081" stroke-width="0.6" opacity="0.4"></circle>
+          <line x1="75" y1="98" x2="75" y2="190" stroke="#d9c081" stroke-width="1.2" opacity="0.85"></line>
+          <line x1="45" y1="132" x2="105" y2="132" stroke="#d9c081" stroke-width="1.2" opacity="0.85"></line>
+        </svg>
+      </div>
+
+      <!-- top scrim for header legibility -->
+      <div style="position: absolute; top: 0; left: 0; right: 0; height: 170px; background: linear-gradient(180deg, rgba(40,16,24,0.55) 0%, rgba(40,16,24,0) 100%); pointer-events: none;"></div>
+
+      <!-- header overlaid -->
+      <div style="position: absolute; top: 0; left: 0; right: 0; padding: 46px 26px 16px; pointer-events: none;">
+        <div style="position: absolute; top: 44px; right: 24px; display: flex; align-items: center; gap: 16px;">
+          <button onClick="{{ openFavorites }}" onPointerDown="{{ stop }}" style="pointer-events: auto; background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; color: #e4c878; position: relative;">
+            <svg width="19" height="22" viewBox="0 0 19 22" fill="none"><path d="M4 3.5h11v15l-5.5-3.8L4 18.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"></path></svg>
+            <sc-if value="{{ hasFavs }}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: -3px; right: -5px; min-width: 15px; height: 15px; padding: 0 3px; border-radius: 8px; background: #a98b48; color: #3e1620; font-family: 'Mulish'; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; line-height: 1;">{{ favCount }}</span></sc-if>
+          </button>
+          <div style="font-family: 'Cormorant Garamond', serif; font-size: 28px; color: #d9c081; line-height: 1;">✝</div>
+        </div>
+        <div style="font-family: 'Mulish'; font-size: 9px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: #e4c878;">{{ eyebrow }}</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-size: 23px; font-weight: 600; color: #f7eed7; line-height: 1.16; margin-top: 5px; padding-right: 40px;">{{ currentSaint.name }}</div>
+        <div style="font-family: 'Mulish'; font-size: 10px; font-weight: 400; letter-spacing: 0.04em; color: rgba(247,238,215,0.6); margin-top: 6px;">{{ currentSaint.age }}</div>
+      </div>
+    </div>
+
+    <!-- QUOTE CARD -->
+    <div class="{{ fadeKey }}" style="background: #F2E9D2; padding: 26px 28px 22px; flex-shrink: 0; animation: vmRise 420ms cubic-bezier(0.2,0.8,0.2,1);">
+      <div style="font-family: 'Mulish'; font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #a07c34; margin-bottom: 15px;">— {{ currentSaint.theme }}</div>
+      <p style="font-family: 'Cormorant Garamond', serif; font-size: {{ quoteSize }}; font-weight: 500; font-style: italic; line-height: 1.42; color: #2e2419; letter-spacing: -0.005em;">{{ currentSaint.quote }}</p>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 22px; padding-top: 16px; border-top: 1px solid rgba(168,139,72,0.28);">
+        <div style="font-family: 'Mulish'; font-size: 11px; color: #b09a6e; letter-spacing: 0.02em;">{{ hint }}</div>
+        <div style="display: flex; align-items: center; gap: 18px;">
+          <button onClick="{{ toggleFavorite }}" style="background: none; border: none; cursor: pointer; font-size: 20px; line-height: 1; color: {{ favColor }}; padding: 4px; transition: transform 160ms cubic-bezier(0.2,0.8,0.2,1);" style-active="transform: scale(0.82);">{{ favGlyph }}</button>
+          <button onClick="{{ openMenu }}" style="background: none; border: none; cursor: pointer; padding: 4px; display: flex; color: #8a6d2f;">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="4" cy="10" r="1.7" fill="currentColor"></circle><circle cx="10" cy="10" r="1.7" fill="currentColor"></circle><circle cx="16" cy="10" r="1.7" fill="currentColor"></circle></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== DOUBLE-TAP / MENU OVERLAY ===== -->
+    <div onClick="{{ closeMenu }}" style="position: absolute; inset: 0; z-index: 60; display: {{ menuDisplay }}; align-items: flex-end; background: rgba(40,16,24,0.42); animation: vmOverlay 220ms ease;">
+      <div onClick="{{ stop }}" style="width: 100%; background: #F7F0DD; border-radius: 22px 22px 0 0; padding: 10px 26px 30px; max-height: 86%; overflow-y: auto; animation: vmSheetUp 320ms cubic-bezier(0.2,0.8,0.2,1); box-shadow: 0 -10px 40px -12px rgba(46,36,25,0.4);">
+
+        <!-- grabber -->
+        <div style="width: 38px; height: 4px; border-radius: 2px; background: #d8c89a; margin: 0 auto 18px;"></div>
+
+        <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 22px;">
+          <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: #5e2230;">Menu</h2>
+          <button onClick="{{ closeMenu }}" style="background: none; border: none; cursor: pointer; font-size: 22px; color: #b09a6e; line-height: 1;">✕</button>
+        </div>
+
+        <!-- THEME FILTER -->
+        <div style="margin-bottom: 26px;">
+          <div style="font-family: 'Mulish'; font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #a07c34; margin-bottom: 14px;">Filtrar por tema</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 9px;">
+            <sc-for list="{{ themes }}" as="t" hint-placeholder-count="6">
+              <button onClick="{{ () =&gt; selectTheme(t.value) }}" style="font-family: 'Mulish'; font-size: 13px; font-weight: 500; cursor: pointer; padding: 9px 15px; border-radius: 2px; transition: all 160ms cubic-bezier(0.2,0.8,0.2,1); color: {{ t.fg }}; background: {{ t.bg }}; border: 1px solid {{ t.bd }};">{{ t.mark }}{{ t.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="height: 1px; background: rgba(168,139,72,0.24); margin: 0 0 22px;"></div>
+
+        <!-- TEXT SIZE -->
+        <div style="margin-bottom: 24px;">
+          <div style="font-family: 'Mulish'; font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #a07c34; margin-bottom: 14px;">Tamanho do texto</div>
+          <div style="display: flex; gap: 8px;">
+            <sc-for list="{{ textSizes }}" as="s" hint-placeholder-count="3">
+              <button onClick="{{ () =&gt; setTextSize(s.value) }}" style="flex: 1; font-family: 'Cormorant Garamond', serif; font-style: italic; cursor: pointer; padding: 12px 8px; border-radius: 2px; transition: all 160ms cubic-bezier(0.2,0.8,0.2,1); font-size: {{ s.preview }}; color: {{ s.fg }}; background: {{ s.bg }}; border: 1px solid {{ s.bd }};">{{ s.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="height: 1px; background: rgba(168,139,72,0.24); margin: 0 0 22px;"></div>
+
+        <!-- LANGUAGE -->
+        <div style="margin-bottom: 26px;">
+          <div style="font-family: 'Mulish'; font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #a07c34; margin-bottom: 14px;">Idioma</div>
+          <div style="display: flex; gap: 8px;">
+            <sc-for list="{{ languages }}" as="l" hint-placeholder-count="2">
+              <button onClick="{{ () =&gt; setLanguage(l.value) }}" style="flex: 1; font-family: 'Mulish'; font-size: 13px; font-weight: 500; cursor: pointer; padding: 12px; border-radius: 2px; transition: all 160ms cubic-bezier(0.2,0.8,0.2,1); color: {{ l.fg }}; background: {{ l.bg }}; border: 1px solid {{ l.bd }};">{{ l.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- VIEW FAVORITES -->
+        <button onClick="{{ openFavorites }}" style="width: 100%; display: flex; align-items: center; justify-content: space-between; font-family: 'Mulish'; font-size: 13px; font-weight: 600; cursor: pointer; padding: 15px; border-radius: 2px; margin-bottom: 12px; transition: all 160ms cubic-bezier(0.2,0.8,0.2,1); color: #5e2230; background: #F2E9D2; border: 1px solid rgba(168,139,72,0.45);">
+          <span>{{ menuFavLabel }}</span>
+          <span style="font-family: 'Mulish'; font-size: 12px; font-weight: 700; color: #a07c34;">{{ favCount }} ✦</span>
+        </button>
+
+        <!-- FAVORITE -->
+        <button onClick="{{ toggleFavorite }}" style="width: 100%; font-family: 'Mulish'; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; padding: 15px; border-radius: 2px; transition: all 160ms cubic-bezier(0.2,0.8,0.2,1); color: {{ favBtnFg }}; background: {{ favBtnBg }}; border: 1.5px solid #a98b48;">{{ favBtnLabel }}</button>
+      </div>
+    </div>
+
+    <!-- ===== FAVORITES SCREEN ===== -->
+    <div onClick="{{ closeFavorites }}" style="position: absolute; inset: 0; z-index: 70; display: {{ favDisplay }}; background: rgba(40,16,24,0.42); animation: vmOverlay 220ms ease;">
+      <div onClick="{{ stop }}" style="position: absolute; inset: 0; background: #F2E9D2; display: flex; flex-direction: column; animation: vmScreenIn 340ms cubic-bezier(0.2,0.8,0.2,1);">
+
+        <!-- screen header -->
+        <div style="flex-shrink: 0; padding: 50px 26px 18px; border-bottom: 1px solid rgba(168,139,72,0.28); display: flex; align-items: flex-end; justify-content: space-between;">
+          <div>
+            <div style="font-family: 'Mulish'; font-size: 9px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: #a07c34;">{{ favEyebrow }}</div>
+            <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 600; color: #5e2230; line-height: 1.04; margin-top: 5px;">{{ favTitle }}</h2>
+          </div>
+          <button onClick="{{ closeFavorites }}" style="background: none; border: none; cursor: pointer; font-size: 24px; color: #b09a6e; line-height: 1; padding: 4px;">✕</button>
+        </div>
+
+        <!-- list / empty -->
+        <div style="flex: 1; min-height: 0; overflow-y: auto;">
+          <sc-if value="{{ favEmpty }}" hint-placeholder-val="{{ true }}">
+            <div style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px;">
+              <div style="font-family: 'Cormorant Garamond', serif; font-size: 46px; color: #d8c89a; line-height: 1;">♡</div>
+              <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 20px; color: #5b513c; margin-top: 16px; max-width: 250px; line-height: 1.42;">{{ favEmptyMsg }}</p>
+            </div>
+          </sc-if>
+          <sc-for list="{{ favList }}" as="f" hint-placeholder-count="0">
+            <div onClick="{{ f.select }}" style="cursor: pointer; padding: 20px 26px; border-bottom: 1px solid rgba(168,139,72,0.20); display: flex; gap: 14px; align-items: flex-start;">
+              <div style="flex: 1; min-width: 0;">
+                <div style="font-family: 'Mulish'; font-size: 9px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #a07c34;">{{ f.theme }}</div>
+                <div style="font-family: 'Cormorant Garamond', serif; font-size: 21px; font-weight: 600; color: #2e2419; margin-top: 3px;">{{ f.name }}</div>
+                <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 15px; color: #5b513c; margin-top: 6px; line-height: 1.36; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ f.quote }}</p>
+              </div>
+              <button onClick="{{ f.remove }}" style="background: none; border: none; cursor: pointer; font-size: 20px; color: #a98b48; line-height: 1; padding: 4px; flex-shrink: 0;">★</button>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 430, &quot;height&quot;: 920 }
+}">
+class Component extends DCLogic {
+  state = {
+    currentId: 1,
+    selectedTheme: null,
+    menuOpen: false,
+    favOpen: false,
+    fadeNonce: 0,
+    favorites: JSON.parse(localStorage.getItem('santos_favorites') || '[]'),
+    settings: JSON.parse(localStorage.getItem('santos_settings') || '{"textSize":"md","language":"pt"}'),
+  };
+
+  lastTap = 0;
+  tapTimer = null;
+
+  imageRef = React.createRef();
+  dragging = false;
+  moved = false;
+  dragStartX = 0;
+  dragStartY = 0;
+
+  saints = [
+    { id: 1, name: 'Santo Agostinho', age: 'c. 354–430', themeValue: 'eucaristia',
+      quote_pt: 'A Eucaristia é o alimento que alimenta a alma e nos une a Cristo.',
+      quote_en: 'The Eucharist is the bread that nourishes the soul and unites us to Christ.' },
+    { id: 2, name: 'Santa Teresa de Calcutá', age: 'c. 1910–1997', themeValue: 'oracao',
+      quote_pt: 'Rezar é simplesmente conversar com Deus. Ele ama você, e é tão simples.',
+      quote_en: 'To pray is simply to talk with God. He loves you, and it is that simple.' },
+    { id: 3, name: 'São João Vianney', age: 'c. 1786–1859', themeValue: 'missa',
+      quote_pt: 'A Santa Missa é a maior ação de graças que podemos oferecer a Deus.',
+      quote_en: 'Holy Mass is the greatest act of thanksgiving we can offer to God.' },
+    { id: 4, name: 'Santo Tomás de Aquino', age: 'c. 1225–1274', themeValue: 'liturgia',
+      quote_pt: 'A Liturgia é o cume para o qual tende toda a ação da Igreja.',
+      quote_en: 'The Liturgy is the summit toward which all the action of the Church tends.' },
+    { id: 5, name: 'Santa Catarina de Sena', age: 'c. 1347–1380', themeValue: 'virtudes',
+      quote_pt: 'A graça é a virtude que nos permite agir segundo a vontade de Deus.',
+      quote_en: 'Grace is the virtue that lets us act according to the will of God.' },
+    { id: 6, name: 'São Bento', age: 'c. 480–547', themeValue: 'sacramentos',
+      quote_pt: 'Os Sacramentos são sinais sensíveis da graça invisível de Deus.',
+      quote_en: 'The Sacraments are visible signs of the invisible grace of God.' },
+  ];
+
+  themeMeta = {
+    eucaristia:  { pt: 'Eucaristia',        en: 'Eucharist' },
+    missa:       { pt: 'Santa Missa',       en: 'Holy Mass' },
+    liturgia:    { pt: 'Liturgia Católica', en: 'Catholic Liturgy' },
+    oracao:      { pt: 'Oração',            en: 'Prayer' },
+    sacramentos: { pt: 'Sacramentos',       en: 'Sacraments' },
+    virtudes:    { pt: 'Virtudes',          en: 'Virtues' },
+  };
+
+  themeOrder = ['eucaristia', 'missa', 'liturgia', 'oracao', 'sacramentos', 'virtudes'];
+
+  pool() {
+    return this.state.selectedTheme
+      ? this.saints.filter(s => s.themeValue === this.state.selectedTheme)
+      : this.saints;
+  }
+
+  current() {
+    return this.saints.find(s => s.id === this.state.currentId) || this.saints[0];
+  }
+
+  nextRandom = () => {
+    const pool = this.pool();
+    if (pool.length <= 1) { this.setState({ fadeNonce: this.state.fadeNonce + 1 }); return; }
+    let pick;
+    do { pick = pool[Math.floor(Math.random() * pool.length)]; }
+    while (pick.id === this.state.currentId);
+    this.setState({ currentId: pick.id, fadeNonce: this.state.fadeNonce + 1 });
+  };
+
+  goNext = () => {
+    const pool = this.pool();
+    if (pool.length === 0) return;
+    const idx = pool.findIndex(s => s.id === this.state.currentId);
+    const next = pool[(idx + 1) % pool.length];
+    this.setState({ currentId: next.id, fadeNonce: this.state.fadeNonce + 1 });
+  };
+
+  goPrev = () => {
+    const pool = this.pool();
+    if (pool.length === 0) return;
+    const idx = pool.findIndex(s => s.id === this.state.currentId);
+    const prev = pool[(idx - 1 + pool.length) % pool.length];
+    this.setState({ currentId: prev.id, fadeNonce: this.state.fadeNonce + 1 });
+  };
+
+  onPointerDown = (e) => {
+    this.dragging = true;
+    this.moved = false;
+    this.dragStartX = e.clientX;
+    this.dragStartY = e.clientY;
+    try { e.currentTarget.setPointerCapture(e.pointerId); } catch (err) {}
+    const node = this.imageRef.current;
+    if (node) node.style.transition = 'none';
+  };
+
+  onPointerMove = (e) => {
+    if (!this.dragging) return;
+    const dx = e.clientX - this.dragStartX;
+    const dy = e.clientY - this.dragStartY;
+    if (Math.abs(dx) > 6 || Math.abs(dy) > 6) this.moved = true;
+    const node = this.imageRef.current;
+    if (node && Math.abs(dx) > Math.abs(dy)) {
+      node.style.transform = 'translateX(' + (dx * 0.6) + 'px)';
+      node.style.opacity = String(1 - Math.min(Math.abs(dx) / 520, 0.4));
+    }
+  };
+
+  onPointerUp = (e) => {
+    if (!this.dragging) return;
+    this.dragging = false;
+    const dx = e.clientX - this.dragStartX;
+    const dy = e.clientY - this.dragStartY;
+    const swipe = Math.abs(dx) > 64 && Math.abs(dx) > Math.abs(dy);
+    const node = this.imageRef.current;
+    if (node) {
+      node.style.transition = 'transform 260ms cubic-bezier(0.2,0.8,0.2,1), opacity 260ms cubic-bezier(0.2,0.8,0.2,1)';
+      node.style.transform = '';
+      node.style.opacity = '';
+    }
+    if (swipe) { if (dx < 0) this.goNext(); else this.goPrev(); }
+  };
+
+  handleTap = () => {
+    if (this.moved) { this.moved = false; return; }
+    const now = Date.now();
+    if (now - this.lastTap < 280) {
+      clearTimeout(this.tapTimer);
+      this.lastTap = 0;
+      this.setState({ menuOpen: true });
+    } else {
+      this.lastTap = now;
+      this.tapTimer = setTimeout(() => { this.nextRandom(); }, 280);
+    }
+  };
+
+  openMenu = (e) => { if (e) e.stopPropagation(); this.setState({ menuOpen: true }); };
+  closeMenu = () => this.setState({ menuOpen: false });
+  stop = (e) => e.stopPropagation();
+
+  selectTheme = (theme) => {
+    const newTheme = this.state.selectedTheme === theme ? null : theme;
+    const pool = newTheme ? this.saints.filter(s => s.themeValue === newTheme) : this.saints;
+    const stillValid = pool.some(s => s.id === this.state.currentId);
+    this.setState({
+      selectedTheme: newTheme,
+      currentId: stillValid ? this.state.currentId : (pool[0] ? pool[0].id : this.state.currentId),
+      fadeNonce: this.state.fadeNonce + 1,
+    });
+  };
+
+  setTextSize = (size) => {
+    const settings = { ...this.state.settings, textSize: size };
+    this.setState({ settings });
+    localStorage.setItem('santos_settings', JSON.stringify(settings));
+  };
+
+  setLanguage = (lang) => {
+    const settings = { ...this.state.settings, language: lang };
+    this.setState({ settings });
+    localStorage.setItem('santos_settings', JSON.stringify(settings));
+  };
+
+  toggleFavorite = (e) => {
+    if (e) e.stopPropagation();
+    const id = this.state.currentId;
+    const favorites = this.state.favorites.includes(id)
+      ? this.state.favorites.filter(x => x !== id)
+      : [...this.state.favorites, id];
+    this.setState({ favorites });
+    localStorage.setItem('santos_favorites', JSON.stringify(favorites));
+  };
+
+  openFavorites = (e) => { if (e) e.stopPropagation(); this.setState({ favOpen: true, menuOpen: false }); };
+  closeFavorites = () => this.setState({ favOpen: false });
+
+  selectFavorite = (id) => {
+    this.setState({ currentId: id, selectedTheme: null, favOpen: false, fadeNonce: this.state.fadeNonce + 1 });
+  };
+
+  removeFavorite = (id, e) => {
+    if (e) e.stopPropagation();
+    const favorites = this.state.favorites.filter(x => x !== id);
+    this.setState({ favorites });
+    localStorage.setItem('santos_favorites', JSON.stringify(favorites));
+  };
+
+  renderVals() {
+    const lang = this.state.settings.language;
+    const sz = this.state.settings.textSize;
+    const saint = this.current();
+    const isFav = this.state.favorites.includes(saint.id);
+
+    const wine = '#5e2230', gold = '#a98b48', goldSoft = 'rgba(168,139,72,0.10)';
+    const cardBd = 'rgba(168,139,72,0.45)', ink = '#5b513c';
+
+    const themes = this.themeOrder.map(v => {
+      const active = this.state.selectedTheme === v;
+      return {
+        value: v,
+        label: this.themeMeta[v][lang],
+        mark: active ? '✓ ' : '',
+        bg: active ? wine : '#F2E9D2',
+        fg: active ? '#f7eed7' : ink,
+        bd: active ? wine : cardBd,
+      };
+    });
+
+    const sizeLabel = { sm: { pt: 'Aa', en: 'Aa' }, md: { pt: 'Aa', en: 'Aa' }, lg: { pt: 'Aa', en: 'Aa' } };
+    const sizePreview = { sm: '16px', md: '21px', lg: '27px' };
+    const textSizes = ['sm', 'md', 'lg'].map(v => {
+      const active = sz === v;
+      return {
+        value: v,
+        label: sizeLabel[v][lang],
+        preview: sizePreview[v],
+        bg: active ? wine : '#F2E9D2',
+        fg: active ? '#f7eed7' : ink,
+        bd: active ? wine : cardBd,
+      };
+    });
+
+    const languages = [
+      { value: 'pt', label: 'Português' },
+      { value: 'en', label: 'English' },
+    ].map(l => {
+      const active = lang === l.value;
+      return { ...l, bg: active ? wine : '#F2E9D2', fg: active ? '#f7eed7' : ink, bd: active ? wine : cardBd };
+    });
+
+    const t = {
+      pt: { eyebrow: 'Santo do dia', hint: 'Deslize · toque · menu',
+            favOn: '★ Remover dos favoritos', favOff: '☆ Guardar nos favoritos',
+            favEyebrow: 'Sua coleção', favTitle: 'Favoritos', menuFav: 'Ver favoritos',
+            favEmpty: 'Você ainda não guardou nenhum santo. Toque no coração para começar sua coleção.' },
+      en: { eyebrow: 'Saint of the day', hint: 'Swipe · tap · menu',
+            favOn: '★ Remove from favorites', favOff: '☆ Save to favorites',
+            favEyebrow: 'Your collection', favTitle: 'Favorites', menuFav: 'View favorites',
+            favEmpty: "You haven't saved any saints yet. Tap the heart to start your collection." },
+    }[lang];
+
+    const favList = this.state.favorites
+      .map(id => this.saints.find(s => s.id === id))
+      .filter(Boolean)
+      .map(s => ({
+        id: s.id,
+        name: s.name,
+        theme: this.themeMeta[s.themeValue][lang],
+        quote: lang === 'pt' ? s.quote_pt : s.quote_en,
+        select: () => this.selectFavorite(s.id),
+        remove: (e) => this.removeFavorite(s.id, e),
+      }));
+    const favCount = favList.length;
+
+    return {
+      currentSaint: {
+        name: saint.name,
+        age: saint.age,
+        theme: this.themeMeta[saint.themeValue][lang],
+        quote: lang === 'pt' ? saint.quote_pt : saint.quote_en,
+      },
+      eyebrow: t.eyebrow,
+      hint: t.hint,
+      quoteSize: { sm: '20px', md: '23px', lg: '28px' }[sz],
+      fadeKey: 'fade-' + this.state.fadeNonce,
+      handleTap: this.handleTap,
+      imageRef: this.imageRef,
+      onPointerDown: this.onPointerDown,
+      onPointerMove: this.onPointerMove,
+      onPointerUp: this.onPointerUp,
+      openFavorites: this.openFavorites,
+      closeFavorites: this.closeFavorites,
+      favDisplay: this.state.favOpen ? 'flex' : 'none',
+      favList,
+      favCount,
+      hasFavs: favCount > 0,
+      favEmpty: favCount === 0,
+      favEmptyMsg: t.favEmpty,
+      favTitle: t.favTitle,
+      favEyebrow: t.favEyebrow,
+      menuFavLabel: t.menuFav,
+      openMenu: this.openMenu,
+      closeMenu: this.closeMenu,
+      stop: this.stop,
+      menuDisplay: this.state.menuOpen ? 'flex' : 'none',
+      themes,
+      selectTheme: this.selectTheme,
+      textSizes,
+      setTextSize: this.setTextSize,
+      languages,
+      setLanguage: this.setLanguage,
+      toggleFavorite: this.toggleFavorite,
+      favGlyph: isFav ? '★' : '♡',
+      favColor: isFav ? '#a98b48' : '#b5613c',
+      favBtnLabel: isFav ? t.favOn : t.favOff,
+      favBtnBg: isFav ? '#a98b48' : 'transparent',
+      favBtnFg: isFav ? '#fff' : '#8a6d2f',
+    };
+  }
+}
+</script>
+</body>
+</html>

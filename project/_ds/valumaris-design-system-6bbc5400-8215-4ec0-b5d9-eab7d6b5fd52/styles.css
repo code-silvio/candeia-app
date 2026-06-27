@@ -1,0 +1,18 @@
+/* ============================================================
+   VALUMARIS — Design System entry
+   Link this single file to load the full system:
+     <link rel="stylesheet" href="styles.css">
+   It pulls in the canonical tokens, type scale and the v2
+   signature utilities (depth charts, sounding rail, logo marks).
+
+   Context-specific sheets are intentionally NOT imported here:
+     · preview/_shared.css — 700px fixed-width preview cards
+     · agro/agro.css       — Agro module application styles
+   ============================================================ */
+
+/* Tokens, fonts and semantic type styles (the foundation). */
+@import url('./colors_and_type.css');
+
+/* v2 signature utilities — depth-shaded charts, sounding rail,
+   logo-mark variants. Also re-imports colors_and_type.css (deduped). */
+@import url('./v2/v2.css');

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Mulish:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Mulish', sans-serif; background: #ECE4D0; color: #2e2419; -webkit-font-smoothing: antialiased; }
+    .swatch { height: 92px; border-radius: 3px; }
+    .mono { font-variant-numeric: tabular-nums; }
+  </style>
+</helmet>
+
+<div style="background: #ECE4D0; padding: 64px 40px 96px;">
+
+  <!-- ===== HEADER ===== -->
+  <div style="max-width: 1080px; margin: 0 auto 80px;">
+    <div style="font-family: 'Mulish'; font-size: 11px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: #a07c34; margin-bottom: 18px;">Design System · v2 · Manuscrito Iluminado</div>
+    <h1 style="font-family: 'Cormorant Garamond', serif; font-size: 56px; font-weight: 600; line-height: 1.02; letter-spacing: -0.015em; color: #2e2419; max-width: 800px;">Onde a fé encontra a <em style="font-style: italic; color: #8a6d2f;">luz</em></h1>
+    <p style="font-family: 'Mulish'; font-size: 16px; font-weight: 400; color: #5b513c; max-width: 620px; margin-top: 20px; line-height: 1.65;">Sistema visual para um aplicativo devocional católico — santos, imagens e suas palavras sobre Eucaristia, Santa Missa e Liturgia. Pergaminho quente, vinho litúrgico e ouro antigo. Minimalista e acolhedor, pensado para todas as idades a partir de 10 anos.</p>
+  </div>
+
+  <!-- ===== 01 · PALETTE ===== -->
+  <div style="max-width: 1080px; margin: 0 auto 80px;">
+    <div style="font-family: 'Mulish'; font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #a07c34; padding-bottom: 16px; border-bottom: 1px solid rgba(168,139,72,0.3); margin-bottom: 32px;">01 · Paleta</div>
+
+    <div style="font-family: 'Mulish'; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #8a6d2f; margin-bottom: 14px;">Superfície · Pergaminho</div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 36px;">
+      <sc-for list="{{ surfaceColors }}" as="c" hint-placeholder-count="3">
+        <div>
+          <div class="swatch" style="background: {{ c.hex }}; border: 1px solid rgba(46,36,25,0.08);"></div>
+          <div style="font-family: 'Mulish'; font-size: 12px; font-weight: 600; color: #2e2419; margin-top: 9px;">{{ c.name }}</div>
+          <div class="mono" style="font-family: 'Mulish'; font-size: 11px; color: #9a8f7d; margin-top: 2px;">{{ c.hex }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="font-family: 'Mulish'; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #8a6d2f; margin-bottom: 14px;">Vinho Litúrgico · profundidade</div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 36px;">
+      <sc-for list="{{ wineColors }}" as="c" hint-placeholder-count="3">
+        <div>
+          <div class="swatch" style="background: {{ c.hex }};"></div>
+          <div style="font-family: 'Mulish'; font-size: 12px; font-weight: 600; color: #2e2419; margin-top: 9px;">{{ c.name }}</div>
+          <div class="mono" style="font-family: 'Mulish'; font-size: 11px; color: #9a8f7d; margin-top: 2px;">{{ c.hex }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="font-family: 'Mulish'; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #8a6d2f; margin-bottom: 14px;">Ouro · acento sagrado &amp; Tinta · texto</div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px;">
+      <sc-for list="{{ accentColors }}" as="c" hint-placeholder-count="4">
+        <div>
+          <div class="swatch" style="background: {{ c.hex }}; border: 1px solid rgba(46,36,25,0.08);"></div>
+          <div style="font-family: 'Mulish'; font-size: 12px; font-weight: 600; color: #2e2419; margin-top: 9px;">{{ c.name }}</div>
+          <div class="mono" style="font-family: 'Mulish'; font-size: 11px; color: #9a8f7d; margin-top: 2px;">{{ c.hex }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="background: #F7F0DD; border: 1px solid rgba(168,139,72,0.3); border-radius: 4px; padding: 28px 32px; margin-top: 36px;">
+      <div style="font-family: 'Mulish'; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #8a6d2f; margin-bottom: 12px;">Filosofia da cor</div>
+      <p style="font-family: 'Mulish'; font-size: 15px; font-weight: 400; color: #5b513c; line-height: 1.65;">O <strong style="color: #5e2230;">vinho litúrgico</strong> evoca a cor da Paixão e da Eucaristia — profundo, reverente. O <strong style="color: #8a6d2f;">ouro antigo</strong> é o único acento: molduras, cruzes, destaques. O <strong>pergaminho</strong> é o papel do devocionário — quente, silencioso, respeitoso com a palavra do santo. Sem azul frio, sem gradientes berrantes. A paleta deve evocar oração, não tecnologia.</p>
+    </div>
+  </div>
+
+  <!-- ===== 02 · TYPOGRAPHY ===== -->
+  <div style="max-width: 1080px; margin: 0 auto 80px;">
+    <div style="font-family: 'Mulish'; font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #a07c34; padding-bottom: 16px; border-bottom: 1px solid rgba(168,139,72,0.3); margin-bottom: 32px;">02 · Tipografia</div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: rgba(168,139,72,0.3);">
+      <div style="background: #F7F0DD; padding: 32px;">
+        <div style="font-family: 'Mulish'; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #8a6d2f; margin-bottom: 18px;">Cormorant Garamond — Display</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 600; color: #2e2419; line-height: 1.1;">Santo Agostinho</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-size: 24px; font-style: italic; font-weight: 500; color: #5e2230; line-height: 1.3; margin-top: 14px;">"A Eucaristia é o alimento que alimenta a alma."</div>
+        <p style="font-family: 'Mulish'; font-size: 13px; color: #9a8f7d; margin-top: 18px; line-height: 1.5;">Nomes de santos, citações, títulos. O itálico carrega a emoção da frase. Pesos 500–600.</p>
+      </div>
+      <div style="background: #F7F0DD; padding: 32px;">
+        <div style="font-family: 'Mulish'; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #8a6d2f; margin-bottom: 18px;">Mulish — Interface</div>
+        <div style="font-family: 'Mulish'; font-size: 9px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: #a07c34;">Santo do dia</div>
+        <div style="font-family: 'Mulish'; font-size: 16px; font-weight: 400; color: #5b513c; line-height: 1.6; margin-top: 14px;">Texto de apoio, rótulos e navegação. Limpo, humanista e altamente legível — perfeito para crianças. Pesos 300–700.</div>
+        <div style="display: flex; gap: 18px; margin-top: 18px; align-items: baseline;">
+          <span style="font-family: 'Mulish'; font-weight: 300; color: #2e2419;">Light</span>
+          <span style="font-family: 'Mulish'; font-weight: 400; color: #2e2419;">Regular</span>
+          <span style="font-family: 'Mulish'; font-weight: 600; color: #2e2419;">Semibold</span>
+          <span style="font-family: 'Mulish'; font-weight: 700; color: #2e2419;">Bold</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2px; background: rgba(168,139,72,0.3); margin-top: 2px;">
+      <sc-for list="{{ typeScale }}" as="t" hint-placeholder-count="4">
+        <div style="background: #F7F0DD; padding: 24px;">
+          <div style="font-family: 'Mulish'; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #a07c34; margin-bottom: 10px;">{{ t.role }}</div>
+          <div style="font-family: 'Mulish'; font-size: 12px; color: #5b513c;">{{ t.spec }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ===== 03 · COMPONENTS ===== -->
+  <div style="max-width: 1080px; margin: 0 auto 80px;">
+    <div style="font-family: 'Mulish'; font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #a07c34; padding-bottom: 16px; border-bottom: 1px solid rgba(168,139,72,0.3); margin-bottom: 32px;">03 · Componentes</div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px;">
+
+      <!-- Theme pills -->
+      <div style="background: #F7F0DD; border: 1px solid rgba(168,139,72,0.3); border-radius: 4px; padding: 26px;">
+        <div style="font-family: 'Mulish'; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #8a6d2f; margin-bottom: 18px;">Filtro de tema</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 9px;">
+          <span style="font-family: 'Mulish'; font-size: 13px; font-weight: 500; padding: 9px 15px; border-radius: 2px; background: #5e2230; color: #f7eed7;">✓ Eucaristia</span>
+          <span style="font-family: 'Mulish'; font-size: 13px; font-weight: 500; padding: 9px 15px; border-radius: 2px; background: #F2E9D2; color: #5b513c; border: 1px solid rgba(168,139,72,0.45);">Santa Missa</span>
+          <span style="font-family: 'Mulish'; font-size: 13px; font-weight: 500; padding: 9px 15px; border-radius: 2px; background: #F2E9D2; color: #5b513c; border: 1px solid rgba(168,139,72,0.45);">Liturgia</span>
+          <span style="font-family: 'Mulish'; font-size: 13px; font-weight: 500; padding: 9px 15px; border-radius: 2px; background: #F2E9D2; color: #5b513c; border: 1px solid rgba(168,139,72,0.45);">Oração</span>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div style="background: #F7F0DD; border: 1px solid rgba(168,139,72,0.3); border-radius: 4px; padding: 26px;">
+        <div style="font-family: 'Mulish'; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #8a6d2f; margin-bottom: 18px;">Botões</div>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <button style="font-family: 'Mulish'; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 14px; border: none; border-radius: 2px; background: #5e2230; color: #f7eed7; cursor: pointer;">Primário · Vinho</button>
+          <button style="font-family: 'Mulish'; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 14px; border: 1.5px solid #a98b48; border-radius: 2px; background: transparent; color: #8a6d2f; cursor: pointer;">☆ Favoritar · Contorno</button>
+        </div>
+      </div>
+
+      <!-- Eyebrow + quote -->
+      <div style="background: #F7F0DD; border: 1px solid rgba(168,139,72,0.3); border-radius: 4px; padding: 26px;">
+        <div style="font-family: 'Mulish'; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #8a6d2f; margin-bottom: 18px;">Citação</div>
+        <div style="font-family: 'Mulish'; font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #a07c34; margin-bottom: 14px;">— Eucaristia</div>
+        <p style="font-family: 'Cormorant Garamond', serif; font-size: 23px; font-weight: 500; font-style: italic; line-height: 1.42; color: #2e2419;">A Santa Missa é a maior ação de graças que podemos oferecer a Deus.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== 04 · APP PREVIEW ===== -->
+  <div style="max-width: 1080px; margin: 0 auto 80px;">
+    <div style="font-family: 'Mulish'; font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #a07c34; padding-bottom: 16px; border-bottom: 1px solid rgba(168,139,72,0.3); margin-bottom: 32px;">04 · A tela principal</div>
+
+    <div style="display: flex; gap: 48px; flex-wrap: wrap; align-items: flex-start;">
+      <!-- phone -->
+      <div style="width: 300px; height: 640px; border-radius: 34px; overflow: hidden; box-shadow: 0 24px 60px -22px rgba(46,36,25,0.5), 0 0 0 9px #2a2320; display: flex; flex-direction: column; flex-shrink: 0; background: #F2E9D2;">
+        <div style="position: relative; flex: 1; background: radial-gradient(125% 95% at 50% 28%, #7a3a40 0%, #5e2230 46%, #3e1620 100%); display: flex; align-items: center; justify-content: center;">
+          <div style="position: absolute; top: 26px; left: 22px; right: 22px;">
+            <div style="position: absolute; top: 0; right: 0; font-family: 'Cormorant Garamond', serif; font-size: 24px; color: #d9c081;">✝</div>
+            <div style="font-family: 'Mulish'; font-size: 8px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: #e4c878;">Santo do dia</div>
+            <div style="font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: #f7eed7; margin-top: 4px; line-height: 1.1;">Santo Agostinho</div>
+            <div style="font-family: 'Mulish'; font-size: 9px; color: rgba(247,238,215,0.6); margin-top: 5px;">c. 354–430</div>
+          </div>
+          <svg width="120" height="172" viewBox="0 0 120 172" fill="none" style="opacity: 0.9;">
+            <circle cx="60" cy="52" r="32" stroke="#d9c081" stroke-width="1.1" opacity="0.85"/>
+            <circle cx="60" cy="52" r="43" stroke="#d9c081" stroke-width="0.5" opacity="0.4"/>
+            <line x1="60" y1="76" x2="60" y2="150" stroke="#d9c081" stroke-width="1.1" opacity="0.85"/>
+            <line x1="36" y1="104" x2="84" y2="104" stroke="#d9c081" stroke-width="1.1" opacity="0.85"/>
+          </svg>
+        </div>
+        <div style="background: #F2E9D2; padding: 20px 22px 18px;">
+          <div style="font-family: 'Mulish'; font-size: 9px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #a07c34; margin-bottom: 12px;">— Eucaristia</div>
+          <p style="font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 500; font-style: italic; line-height: 1.4; color: #2e2419;">A Eucaristia é o alimento que alimenta a alma e nos une a Cristo.</p>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding-top: 13px; border-top: 1px solid rgba(168,139,72,0.28);">
+            <span style="font-family: 'Mulish'; font-size: 9px; color: #b09a6e;">Toque · duplo toque: menu</span>
+            <span style="font-size: 16px; color: #b5613c;">♡</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- annotations -->
+      <div style="flex: 1; min-width: 260px; padding-top: 8px;">
+        <sc-for list="{{ interactions }}" as="i" hint-placeholder-count="4">
+          <div style="padding: 18px 0; border-bottom: 1px solid rgba(168,139,72,0.25);">
+            <div style="font-family: 'Cormorant Garamond', serif; font-size: 21px; font-weight: 600; color: #5e2230; font-style: italic;">{{ i.action }}</div>
+            <div style="font-family: 'Mulish'; font-size: 14px; color: #5b513c; margin-top: 5px; line-height: 1.55;">{{ i.result }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 05 · PRINCIPLES ===== -->
+  <div style="max-width: 1080px; margin: 0 auto;">
+    <div style="font-family: 'Mulish'; font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #a07c34; padding-bottom: 16px; border-bottom: 1px solid rgba(168,139,72,0.3); margin-bottom: 32px;">05 · Princípios</div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2px; background: rgba(168,139,72,0.3);">
+      <sc-for list="{{ principles }}" as="p" hint-placeholder-count="4">
+        <div style="background: #F7F0DD; padding: 28px;">
+          <div style="font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; color: #8a6d2f; margin-bottom: 10px;">{{ p.title }}</div>
+          <p style="font-family: 'Mulish'; font-size: 14px; color: #5b513c; line-height: 1.6;">{{ p.body }}</p>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="max-width: 1080px; margin: 64px auto 0; padding-top: 28px; border-top: 1px solid rgba(168,139,72,0.3); text-align: center;">
+    <div style="font-family: 'Cormorant Garamond', serif; font-size: 22px; font-style: italic; color: #8a6d2f;">Intelligence that illuminates — para a alma.</div>
+    <p style="font-family: 'Mulish'; font-size: 12px; color: #9a8f7d; margin-top: 8px;">Design System · Aplicativo Devocional Católico · v2 Manuscrito Iluminado</p>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 1160, &quot;height&quot;: &quot;auto&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      surfaceColors: [
+        { name: 'Pergaminho', hex: '#F2E9D2' },
+        { name: 'Pergaminho claro', hex: '#F7F0DD' },
+        { name: 'Pergaminho fundo', hex: '#ECE4D0' },
+      ],
+      wineColors: [
+        { name: 'Vinho', hex: '#5E2230' },
+        { name: 'Vinho profundo', hex: '#3E1620' },
+        { name: 'Vinho claro', hex: '#7A3A40' },
+      ],
+      accentColors: [
+        { name: 'Ouro antigo', hex: '#A98B48' },
+        { name: 'Ouro luz', hex: '#D9C081' },
+        { name: 'Tinta', hex: '#2E2419' },
+        { name: 'Tinta suave', hex: '#5B513C' },
+      ],
+      typeScale: [
+        { role: 'Citação · Display', spec: 'Cormorant Garamond · 20–28px · italic 500' },
+        { role: 'Nome do santo', spec: 'Cormorant Garamond · 20–23px · 600' },
+        { role: 'Corpo / apoio', spec: 'Mulish · 14–16px · 400 · linha 1.6' },
+        { role: 'Rótulo / eyebrow', spec: 'Mulish · 9–11px · 700 · track 0.18–0.24em' },
+      ],
+      interactions: [
+        { action: 'Um toque', result: 'Carrega outro santo aleatório, com transição suave de fade (360ms).' },
+        { action: 'Duplo toque', result: 'Abre o menu inferior: filtro de tema, tamanho do texto, idioma e favoritos.' },
+        { action: 'Coração ♡', result: 'Guarda a citação nos favoritos. Persiste no dispositivo (localStorage).' },
+        { action: 'Imagem full-bleed', result: 'A imagem do santo preenche todo o espaço, prioridade vertical. Vem do backend.' },
+      ],
+      principles: [
+        { title: 'Minimalista', body: 'Sem decoração supérflua. A imagem do santo é o centro; a palavra dele, o apoio silencioso.' },
+        { title: 'Acolhedor', body: 'Tipografia generosa e legível, do menino de 10 anos ao avô. Sem jargão, sem urgência.' },
+        { title: 'Contemplativo', body: 'Espaço para respirar. Animações calmas. O app convida à oração, não ao consumo.' },
+        { title: 'Reverente', body: 'Cores litúrgicas, ouro como acento sagrado. Tradição traduzida para o digital, sem kitsch.' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

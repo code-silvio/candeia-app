@@ -1,0 +1,92 @@
+/* Valumaris v2 — Signature additions:
+   1) New logo-mark variants (contour + light beam)
+   2) Depth-shaded chart utilities
+   3) Vertical sounding rail */
+
+@import url('../colors_and_type.css');
+
+/* ─── DEPTH-SHADED CHART ─── */
+.vm-depth-chart {
+  position: relative;
+  width: 100%;
+}
+.vm-depth-chart svg { display: block; width: 100%; height: auto; }
+
+/* gradient defs are in <defs> per chart, this just standardizes line stroke */
+.vm-depth-line     { stroke: #3A78F0; stroke-width: 1.75; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.vm-depth-echo     { stroke: #3A78F0; stroke-width: 1; fill: none; opacity: 0.22; stroke-linecap: round; stroke-linejoin: round; }
+.vm-depth-fill     { fill: url(#vm-depth-grad); }
+.vm-depth-axis     { stroke: rgba(255,255,255,0.06); stroke-width: 0.5; }
+.vm-depth-axis-light { stroke: rgba(13,21,32,0.06); stroke-width: 0.5; }
+
+/* ─── SOUNDING RAIL (left vertical instrument ruler) ─── */
+.vm-sounding-rail {
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  width: 32px;
+  pointer-events: none;
+  z-index: 100;
+  font-family: var(--font-mono);
+  color: rgba(255,255,255,0.35);
+}
+.vm-sounding-rail.light { color: rgba(13,21,32,0.35); }
+.vm-sounding-rail .axis {
+  position: absolute; left: 16px; top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom,
+    transparent 0,
+    rgba(58,120,240,0.3) 8%,
+    rgba(58,120,240,0.4) 50%,
+    rgba(58,120,240,0.3) 92%,
+    transparent 100%);
+}
+.vm-sounding-rail.light .axis {
+  background: linear-gradient(to bottom,
+    transparent 0,
+    rgba(22,85,200,0.25) 8%,
+    rgba(22,85,200,0.4) 50%,
+    rgba(22,85,200,0.25) 92%,
+    transparent 100%);
+}
+.vm-sounding-rail .ticks {
+  position: absolute; left: 12px; top: 0; bottom: 0; width: 9px;
+  background-image: linear-gradient(to bottom, currentColor 0, currentColor 1px, transparent 1px);
+  background-size: 100% 8px;
+  opacity: 0.18;
+}
+.vm-sounding-rail .coord {
+  position: absolute;
+  left: 22px;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  white-space: nowrap;
+  text-transform: uppercase;
+  transform: translateY(-50%);
+  opacity: 0.7;
+}
+.vm-sounding-rail .coord::before {
+  content: '─ ';
+  color: var(--electric-light);
+  opacity: 0.6;
+  margin-right: 2px;
+}
+.vm-sounding-rail .marker {
+  position: absolute;
+  left: 14px;
+  width: 5px;
+  height: 1px;
+  background: var(--electric-light);
+  opacity: 0.7;
+  transform: translateY(-50%);
+}
+
+/* ─── DEPTH LABEL FORMAT [N42·LIQ] ─── */
+.vm-coord-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--electric-light);
+  opacity: 0.85;
+}
+.vm-coord-label::before { content: '['; opacity: 0.5; }
+.vm-coord-label::after  { content: ']'; opacity: 0.5; }
