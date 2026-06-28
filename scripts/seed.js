@@ -13,8 +13,7 @@ import { readFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { dirname, resolve } from 'node:path'
 import { createClient } from '@supabase/supabase-js'
-
-const THEME_VALUES = ['eucaristia', 'missa', 'liturgia', 'oracao', 'sacramentos', 'virtudes']
+import { validateSeed } from './validateSeed.js'
 
 const SUPABASE_URL = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL
 const SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -34,16 +33,7 @@ const seed = JSON.parse(await readFile(seedPath, 'utf8'))
 if (!Array.isArray(seed) || seed.length === 0) die('seeds/saints.json vazio ou inválido.')
 
 // Validação leve antes de escrever.
-const errors = []
-const seen = new Set()
-for (const s of seed) {
-  if (typeof s.id !== 'number') errors.push(`id ausente/inválido em "${s.name ?? '?'}"`)
-  if (seen.has(s.id)) errors.push(`id duplicado: ${s.id}`)
-  seen.add(s.id)
-  if (!s.name) errors.push(`name ausente (id ${s.id})`)
-  if (!s.quote) errors.push(`quote ausente (id ${s.id})`)
-  if (!THEME_VALUES.includes(s.themeValue)) errors.push(`themeValue desconhecido "${s.themeValue}" (id ${s.id})`)
-}
+const errors = validateSeed(seed)
 if (errors.length) die('Erros de validação:\n  - ' + errors.join('\n  - '))
 
 // seed (camelCase, formato do app) → linha do Postgres (snake_case).

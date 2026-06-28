@@ -40,4 +40,11 @@ export default [
       globals: { ...globals.node },
     },
   },
+  {
+    // Testes (Vitest) com globals injetados.
+    files: ['**/*.{test,spec}.{js,jsx}', 'src/test/**'],
+    languageOptions: {
+      globals: { ...globals.node, ...globals.vitest },
+    },
+  },
 ]
