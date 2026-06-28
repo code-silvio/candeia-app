@@ -1,25 +1,93 @@
-# CODING AGENTS: READ THIS FIRST
+# Candeia — Palavras que iluminam
 
-This is a **handoff bundle** from Claude Design (claude.ai/design).
+App devocional católico: a cada toque, uma citação de santo em tela cheia, com a
+fonte da obra original. Mobile-first, **PWA com offline total**, **sem login**,
+somente leitura. Conteúdo curado e inserido por script.
 
-A user mocked up designs in HTML/CSS/JS using an AI design tool, then exported this bundle so a coding agent can implement the designs for real.
+> Origem: protótipo desenhado no Claude Design e implementado em React.
+> O bundle de design original está em [`project/`](project/) (referência visual).
 
-## What you should do — IMPORTANT
+## Stack
 
-**Read the chat transcripts first.** There are 3 chat transcript(s) in `chats/`. The transcripts show the full back-and-forth between the user and the design assistant — they tell you **what the user actually wants** and **where they landed** after iterating. Don't skip them. The final HTML files are the output, but the chat is where the intent lives.
+| Camada | Tecnologia |
+|---|---|
+| Frontend | React 19 + Vite 7 (PWA via `vite-plugin-pwa`) |
+| Conteúdo | Supabase Postgres (tabela `saints`, RLS read-only) |
+| Imagens | Supabase Storage (bucket público) |
+| Deploy | Vercel (estático + headers de segurança) |
+| Testes | Vitest + React Testing Library |
 
-**Read `project/Catholic App - Interactive Prototype v2.dc.html` in full.** The user had this file open when they triggered the handoff, so it's almost certainly the primary design they want built. Read it top to bottom — don't skim. Then **follow its imports**: open every file it pulls in (shared components, CSS, scripts) so you understand how the pieces fit together before you start implementing.
+Sem backend próprio em runtime: o frontend lê o Supabase direto com a chave
+`anon` (pública). A escrita acontece só via script local (`npm run seed`) com a
+`service_role`. **A segurança vem da RLS**, não de esconder a chave anon.
 
-**If anything is ambiguous, ask the user to confirm before you start implementing.** It's much cheaper to clarify scope up front than to build the wrong thing.
+## Como rodar (dev)
 
-## About the design files
+```bash
+npm install
+npm run dev      # http://localhost:5173
+```
 
-The design medium is **HTML/CSS/JS** — these are prototypes, not production code. Your job is to **recreate them pixel-perfectly** in whatever technology makes sense for the target codebase (React, Vue, native, whatever fits). Match the visual output; don't copy the prototype's internal structure unless it happens to fit.
+Sem `.env` configurado, o app cai no **seed local** ([`seeds/saints.json`](seeds/saints.json)) —
+continua funcionando para desenvolvimento e offline.
 
-**Don't render these files in a browser or take screenshots unless the user asks you to.** Everything you need — dimensions, colors, layout rules — is spelled out in the source. Read the HTML and CSS directly; a screenshot won't tell you anything they don't.
+Para conectar ao Supabase de verdade (schema, chaves, `.env`, seed, imagens e
+deploy), siga o **[SETUP.md](SETUP.md)**.
 
-## Bundle contents
+## Scripts
 
-- `README.md` — this file
-- `chats/` — conversation transcripts (read these!)
-- `project/` — the `Design system: Catholic mobile app` project files (HTML prototypes, assets, components)
+| Comando | O quê |
+|---|---|
+| `npm run dev` | Dev server (Vite) |
+| `npm run build` | Build de produção + service worker (PWA) |
+| `npm run preview` | Servir o build localmente |
+| `npm run lint` | ESLint |
+| `npm test` | Testes (Vitest, modo run) |
+| `npm run test:watch` | Testes em watch |
+| `npm run seed` | Upsert do `seeds/saints.json` no Supabase |
+
+## Estrutura
+
+```
+src/
+├─ data/saints.js          Seed local + metadados de tema (ponto de troca p/ Supabase)
+├─ theme/tokens.js         Tokens de cor, easing, tamanhos
+├─ lib/
+│  ├─ supabase.js          Cliente Supabase (anon, read-only)
+│  └─ shareCard.js         Geração do card de compartilhamento (canvas)
+├─ hooks/
+│  ├─ useSaints.js         Fonte de santos (offline-first: cache → seed → Supabase)
+│  ├─ useSaintCarousel.js  Navegação, gestos (swipe/tap) e animações
+│  └─ useSettings.js       Preferências (tamanho do texto) em localStorage
+├─ components/             SaintStage, QuoteCard, MenuSheet, ShareSheet, InfoSheet, …
+└─ App.jsx                 Composição
+
+scripts/
+├─ seed.js                 Upsert no Supabase (service_role, local)
+└─ validateSeed.js         Validação pura do seed (testável)
+
+seeds/saints.json          Conteúdo versionado (fonte do seed)
+supabase/schema.sql        Tabela + RLS + bucket (idempotente)
+vercel.json                Headers de segurança (CSP, HSTS, …)
+```
+
+## Funcionalidades
+
+- **Toque** → próxima citação aleatória · **duplo-toque** → menu · **swipe** → anterior/próxima
+- Filtro por tema (Eucaristia, Missa, Liturgia, Oração, Sacramentos, Virtudes)
+- Tamanho do texto ajustável (persistido)
+- Fonte da citação (obra, autor, página, editora)
+- Compartilhar / baixar card gerado por canvas
+- Instalável (PWA) e funcional offline
+
+## Conteúdo
+
+Todo o conteúdo é inserido por script, a partir de [`seeds/saints.json`](seeds/saints.json).
+Para adicionar/editar um santo: edite o JSON e rode `npm run seed`. Imagens são
+enviadas manualmente ao Supabase Storage; veja o [SETUP.md](SETUP.md).
+
+## Segurança
+
+- Chave `anon` no frontend é **pública por design** — protegida pela RLS (só `SELECT`).
+- Chave `service_role` fica **só na sua máquina** (`.env`, fora do git, nunca `VITE_`).
+- Headers (CSP, HSTS, `X-Frame-Options`, etc.) em [`vercel.json`](vercel.json).
