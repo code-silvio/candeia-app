@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "name": "Santo Agostinho",
+    "age": "c. 354–430",
+    "themeValue": "eucaristia",
+    "image": "/assets/santo-agostinho.png",
+    "quote": "A Eucaristia é o alimento que alimenta a alma e nos une a Cristo.",
+    "source": { "work": "Confissões", "author": "Santo Agostinho", "book": "Livro VII", "page": "p. 142", "publisher": "Paulus", "edition": "3ª ed., 2017" }
+  },
+  {
+    "id": 2,
+    "name": "Santa Teresa de Calcutá",
+    "age": "c. 1910–1997",
+    "themeValue": "oracao",
+    "image": "/assets/madre-teresa.png",
+    "quote": "Rezar é simplesmente conversar com Deus. Ele ama você, e é tão simples.",
+    "source": { "work": "Um Caminho Simples", "author": "Madre Teresa", "book": "Cap. 2 — Oração", "page": "p. 28", "publisher": "Editora Sextante", "edition": "1ª ed., 2006" }
+  },
+  {
+    "id": 3,
+    "name": "São João Vianney",
+    "age": "c. 1786–1859",
+    "themeValue": "missa",
+    "image": null,
+    "quote": "A Santa Missa é a maior ação de graças que podemos oferecer a Deus.",
+    "source": { "work": "Sermões do Cura d'Ars", "author": "São João Maria Vianney", "book": "Sobre a Santa Missa", "page": "p. 87", "publisher": "Quadrante", "edition": "2ª ed., 2014" }
+  },
+  {
+    "id": 4,
+    "name": "Santo Tomás de Aquino",
+    "age": "c. 1225–1274",
+    "themeValue": "liturgia",
+    "image": null,
+    "quote": "A Liturgia é o cume para o qual tende toda a ação da Igreja.",
+    "source": { "work": "Suma Teológica", "author": "Santo Tomás de Aquino", "book": "III, q. 83", "page": "p. 512", "publisher": "Edições Loyola", "edition": "2ª ed., 2015" }
+  },
+  {
+    "id": 5,
+    "name": "Santa Catarina de Sena",
+    "age": "c. 1347–1380",
+    "themeValue": "virtudes",
+    "image": null,
+    "quote": "A graça é a virtude que nos permite agir segundo a vontade de Deus.",
+    "source": { "work": "Diálogo da Divina Providência", "author": "Santa Catarina de Sena", "book": "Tratado da Discrição", "page": "p. 64", "publisher": "Paulinas", "edition": "1ª ed., 2010" }
+  },
+  {
+    "id": 6,
+    "name": "São Bento",
+    "age": "c. 480–547",
+    "themeValue": "sacramentos",
+    "image": "/assets/sao-bento.png",
+    "quote": "Os Sacramentos são sinais sensíveis da graça invisível de Deus.",
+    "source": { "work": "A Regra de São Bento", "author": "São Bento de Núrsia", "book": "Prólogo", "page": "p. 19", "publisher": "Editora Vozes", "edition": "5ª ed., 2018" }
+  }
+]
