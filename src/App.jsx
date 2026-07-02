@@ -10,8 +10,10 @@ import QuoteCard from './components/QuoteCard'
 import MenuSheet from './components/MenuSheet'
 import ShareSheet from './components/ShareSheet'
 import InfoSheet from './components/InfoSheet'
+import SplashScreen from './components/SplashScreen'
 
 export default function App() {
+  const [started, setStarted] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [infoOpen, setInfoOpen] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
@@ -76,6 +78,8 @@ export default function App() {
         overflow: 'hidden',
         boxShadow: '0 30px 80px -28px rgba(46,36,25,0.55)',
       }}>
+        {!started && <SplashScreen onStart={() => setStarted(true)} />}
+
         <SaintStage
           saint={saint}
           iconKey={THEME_META[saint.themeValue].icon}
